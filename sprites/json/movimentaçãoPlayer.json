@@ -1,0 +1,67 @@
+{
+  "sprite": "Players",
+  "edu_walk": {
+    "right": [
+      "sprites/png/eduDireita2.png",
+      "sprites/png/eduDireita1.png",
+      "sprites/png/eduDireita2.png",
+      "sprites/png/eduDireita3.png"
+    ],
+    "left": [
+      "sprites/png/eduEsquerda2.png",
+      "sprites/png/eduEsquerda1.png",
+      "sprites/png/eduEsquerda2.png",
+      "sprites/png/eduEsquerda3.png"
+    ],
+    "up": [
+      "sprites/png/eduCima3.png",
+      "sprites/png/eduCima1.png",
+      "sprites/png/eduCima2.png",
+      "sprites/png/eduCima3.png",
+      "sprites/png/eduCima4.png",
+      "sprites/png/eduCima5.png",
+      "sprites/png/eduCima6.png"
+    ],
+    "down": [
+      "sprites/png/eduBaixo3.png",
+      "sprites/png/eduBaixo1.png",
+      "sprites/png/eduBaixo2.png",
+      "sprites/png/eduBaixo3.png",
+      "sprites/png/eduBaixo4.png",
+      "sprites/png/eduBaixo5.png",
+      "sprites/png/eduBaixo6.png"
+    ]
+  },
+  "brenda_walk": {
+    "right": [
+      "sprites/png/brendaDireita2.png",
+      "sprites/png/brendaDireita1.png",
+      "sprites/png/brendaDireita2.png",
+      "sprites/png/brendaDireita3.png"
+    ],
+    "left": [
+      "sprites/png/brendaEsquerda2.png",
+      "sprites/png/brendaEsquerda1.png",
+      "sprites/png/brendaEsquerda2.png",
+      "sprites/png/brendaEsquerda3.png"
+    ],
+    "up": [
+      "sprites/png/brendaCima4.png",
+      "sprites/png/brendaCima1.png",
+      "sprites/png/brendaCima2.png",
+      "sprites/png/brendaCima3.png",
+      "sprites/png/brendaCima4.png",
+      "sprites/png/brendaCima5.png",
+      "sprites/png/brendaCima6.png"
+    ],
+    "down": [
+      "sprites/png/brendaBaixo4.png",
+      "sprites/png/brendaBaixo1.png",
+      "sprites/png/brendaBaixo2.png",
+      "sprites/png/brendaBaixo3.png",
+      "sprites/png/brendaBaixo4.png",
+      "sprites/png/brendaBaixo5.png",
+      "sprites/png/brendaBaixo6.png"
+    ]
+  }
+}
