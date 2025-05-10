@@ -101,9 +101,9 @@ void DrawPlayer(PlayerAnimado *p) {
 }
 
 int main(void) {
-    const int screenWidth = 800;
-    const int screenHeight = 600;
-    InitWindow(screenWidth, screenHeight, "Dois jogadores animados com JSON");
+    const int screenWidth = 1280;
+    const int screenHeight = 720;
+    InitWindow(screenWidth, screenHeight, "Coin Hunting");
 
     #define JSON_PATH "sprites/json/movimentaçãoPlayer.json"
 
@@ -117,16 +117,42 @@ int main(void) {
         bool p2Moving = false;
 
         // Controles Player 1 (WASD)
-        if (IsKeyDown(KEY_W)) { p1.position.y -= p1.speed; p1.currentDirection = UP; p1Moving = true; }
-        else if (IsKeyDown(KEY_S)) { p1.position.y += p1.speed; p1.currentDirection = DOWN; p1Moving = true; }
-        else if (IsKeyDown(KEY_A)) { p1.position.x -= p1.speed; p1.currentDirection = LEFT; p1Moving = true; }
-        else if (IsKeyDown(KEY_D)) { p1.position.x += p1.speed; p1.currentDirection = RIGHT; p1Moving = true; }
+        if (IsKeyDown(KEY_W) && p1.position.y > 0) {
+            p1.position.y -= p1.speed;
+            p1.currentDirection = UP;
+            p1Moving = true;
+        } else if (IsKeyDown(KEY_S) && p1.position.y + p1.down[0].height < screenHeight) {
+            p1.position.y += p1.speed;
+            p1.currentDirection = DOWN;
+            p1Moving = true;
+        } else if (IsKeyDown(KEY_A) && p1.position.x > 0) {
+            p1.position.x -= p1.speed;
+            p1.currentDirection = LEFT;
+            p1Moving = true;
+        } else if (IsKeyDown(KEY_D) && p1.position.x + p1.right[0].width < screenWidth) {
+            p1.position.x += p1.speed;
+            p1.currentDirection = RIGHT;
+            p1Moving = true;
+        }
 
         // Controles Player 2 (Setas)
-        if (IsKeyDown(KEY_UP)) { p2.position.y -= p2.speed; p2.currentDirection = UP; p2Moving = true; }
-        else if (IsKeyDown(KEY_DOWN)) { p2.position.y += p2.speed; p2.currentDirection = DOWN; p2Moving = true; }
-        else if (IsKeyDown(KEY_LEFT)) { p2.position.x -= p2.speed; p2.currentDirection = LEFT; p2Moving = true; }
-        else if (IsKeyDown(KEY_RIGHT)) { p2.position.x += p2.speed; p2.currentDirection = RIGHT; p2Moving = true; }
+        if (IsKeyDown(KEY_UP) && p2.position.y > 0) {
+            p2.position.y -= p2.speed;
+            p2.currentDirection = UP;
+            p2Moving = true;
+        } else if (IsKeyDown(KEY_DOWN) && p2.position.y + p2.down[0].height < screenHeight) {
+            p2.position.y += p2.speed;
+            p2.currentDirection = DOWN;
+            p2Moving = true;
+        } else if (IsKeyDown(KEY_LEFT) && p2.position.x > 0) {
+            p2.position.x -= p2.speed;
+            p2.currentDirection = LEFT;
+            p2Moving = true;
+        } else if (IsKeyDown(KEY_RIGHT) && p2.position.x + p2.right[0].width < screenWidth) {
+            p2.position.x += p2.speed;
+            p2.currentDirection = RIGHT;
+            p2Moving = true;
+        }
 
         if (p1Moving) UpdateAnimation(&p1);
         else p1.frameIndex = 0;
