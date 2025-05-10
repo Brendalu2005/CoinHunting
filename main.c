@@ -31,8 +31,16 @@ void LoadAnimationTextures(Texture2D *textures, const cJSON *array, int max) {
     for (int i = 0; i < max; i++) {
         const char *path = cJSON_GetArrayItem(array, i)->valuestring;
         textures[i] = LoadTexture(path);
+
+        // Verifique se a textura foi carregada com sucesso
+        if (textures[i].id == 0) {
+            TraceLog(LOG_ERROR, "Erro ao carregar textura: %s", path);
+        } else {
+            TraceLog(LOG_INFO, "Textura carregada com sucesso: %s", path);
+        }
     }
 }
+
 
 PlayerAnimado LoadPlayerFromJSON(const char *jsonPath, const char *playerKey, Vector2 startPos) {
     PlayerAnimado player = {0};
@@ -64,12 +72,20 @@ PlayerAnimado LoadPlayerFromJSON(const char *jsonPath, const char *playerKey, Ve
         return player;
     }
 
-    cJSON *playerObj = cJSON_GetObjectItem(root, playerKey);
-    if (!playerObj) {
-        TraceLog(LOG_ERROR, "Chave do jogador nao encontrada: %s", playerKey);
-        cJSON_Delete(root);
-        return player;
-    }
+    cJSON *movObj = cJSON_GetObjectItem(root, "movimentação");
+if (!movObj) {
+    TraceLog(LOG_ERROR, "Chave 'movimentação' não encontrada no JSON.");
+    cJSON_Delete(root);
+    return player;
+}
+
+cJSON *playerObj = cJSON_GetObjectItem(movObj, playerKey);
+if (!playerObj) {
+    TraceLog(LOG_ERROR, "Chave do jogador nao encontrada: %s", playerKey);
+    cJSON_Delete(root);
+    return player;
+}
+
 
     LoadAnimationTextures(player.up, cJSON_GetObjectItem(playerObj, "up"), MAX_FRAMES_UD);
     LoadAnimationTextures(player.down, cJSON_GetObjectItem(playerObj, "down"), MAX_FRAMES_UD);
@@ -180,6 +196,8 @@ int main(void) {
             UnloadTexture(p2.right[i]);
         }
     }
+
+
 
     CloseWindow();
     return 0;

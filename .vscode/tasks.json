@@ -1,0 +1,25 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Compilar e Executar CoinHunting",
+      "type": "shell",
+      "command": "/bin/bash",
+      "args": [
+        "-c",
+        "/usr/bin/gcc -fdiagnostics-color=always -g /home/brendalucb/CoinHunting/CoinHunting/main.c -o /home/brendalucb/CoinHunting/main -I/home/brendalucb/CoinHunting/libs/raylib/include -I/home/brendalucb/CoinHunting/libs/cJSON/include -L/home/brendalucb/CoinHunting/libs/raylib/lib -L/home/brendalucb/CoinHunting/libs/cJSON/lib -lraylib -lcjson -lm -lpthread -ldl -lrt -lX11 && /home/brendalucb/CoinHunting/main"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared"
+      }
+    }
+  ]
+}
