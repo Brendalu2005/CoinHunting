@@ -1,0 +1,17 @@
+CC = gcc
+CFLAGS = -Wall -std=c99 -O2 $(shell pkg-config --cflags raylib)
+LDFLAGS = $(shell pkg-config --libs raylib) -lm -ldl -lpthread -lGL -lrt -lX11
+LIBRARY_PATH = /usr/local/lib64
+
+SRC = main.c cJSON.c
+
+OBJ = $(SRC:.c=.o)
+
+%.o: %.c
+    $(CC) $(CFLAGS) -c $< -o $@
+
+jogo: $(OBJ)
+    $(CC) $(CFLAGS) -o jogo $(OBJ) $(LDFLAGS)
+
+clean:
+    rm -f jogo $(OBJ)
