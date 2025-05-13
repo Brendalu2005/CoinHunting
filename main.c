@@ -1,4 +1,4 @@
-// main.c
+
 #include "raylib.h"
 #include "cJSON.h"
 #include <stdio.h>

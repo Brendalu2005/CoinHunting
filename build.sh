@@ -5,7 +5,7 @@ if [ -f /etc/os-release ]; then
     if [ "$ID" == "fedora" ]; then
         make -f Makefile.fedora
     elif [ "$ID" == "ubuntu" ] || [ "$ID" == "zorin" ]; then
-        make -f Makefile.ubuntu
+        make -f Makefile
     else
         echo "Sistema não suportado"
     fi
