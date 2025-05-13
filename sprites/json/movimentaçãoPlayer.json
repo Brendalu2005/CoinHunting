@@ -63,5 +63,33 @@
       "sprites/png/brendaBaixo5.png",
       "sprites/png/brendaBaixo6.png"
     ]
+  },
+  "ghost_walk": {
+    "right": [
+      "sprites/png/ghostdireita1.png",
+      "sprites/png/ghostdireita2.png",
+      "sprites/png/ghostdireita3.png",
+      "sprites/png/ghostdireita4.png",
+      "sprites/png/ghostdireita5.png",
+      "sprites/png/ghostdireita6.png"
+    ],
+    "left": [
+      "sprites/png/ghostesquerda1.png",
+      "sprites/png/ghostesquerda2.png",
+      "sprites/png/ghostesquerda3.png",
+      "sprites/png/ghostesquerda4.png",
+      "sprites/png/ghostesquerda5.png",
+      "sprites/png/ghostesquerda6.png"
+    ],
+    "up": [
+      "sprites/png/ghostfrente.png",
+      "sprites/png/ghostfrente.png"
+
+    ],
+    "down": [
+      "sprites/png/ghosttras.png",
+      "sprites/png/ghosttras.png"
+
+    ]
   }
 }

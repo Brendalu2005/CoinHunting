@@ -1,186 +1,190 @@
-
 #include "raylib.h"
 #include "cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "ghost.h"
 
 typedef enum {
     UP,
     DOWN,
     LEFT,
     RIGHT
-} Direction;
+} Direcao;
 
-#define MAX_FRAMES_UD 6
-#define MAX_FRAMES_LR 4
+#define MAX_FRAMES_CIMA_BAIXO 6
+#define MAX_FRAMES_LADO 4
 
 typedef struct {
-    Vector2 position;
-    float speed;
-    Direction currentDirection;
-    float frameTime;
-    float timer;
-    int frameIndex;
-    Texture2D up[MAX_FRAMES_UD];
-    Texture2D down[MAX_FRAMES_UD];
-    Texture2D left[MAX_FRAMES_LR];
-    Texture2D right[MAX_FRAMES_LR];
-} PlayerAnimado;
+    Vector2 posicao;
+    float velocidade;
+    Direcao direcaoAtual;
+    float tempoFrame;
+    float temporizador;
+    int indiceFrame;
 
-void LoadAnimationTextures(Texture2D *textures, const cJSON *array, int max) {
-    for (int i = 0; i < max; i++) {
-        const char *path = cJSON_GetArrayItem(array, i)->valuestring;
-        textures[i] = LoadTexture(path);
+    Texture2D cima[MAX_FRAMES_CIMA_BAIXO];
+    Texture2D baixo[MAX_FRAMES_CIMA_BAIXO];
+    Texture2D esquerda[MAX_FRAMES_LADO];
+    Texture2D direita[MAX_FRAMES_LADO];
+} Jogador;
+
+void CarregarTexturas(Texture2D *imagens, const cJSON *array, int *quantidade) {
+    *quantidade = cJSON_GetArraySize(array);
+    for (int i = 0; i < *quantidade; i++) {
+        const char *caminho = cJSON_GetArrayItem(array, i)->valuestring;
+        imagens[i] = LoadTexture(caminho);
+        if (imagens[i].id == 0) {
+            TraceLog(LOG_ERROR, "Falha ao carregar textura: %s", caminho);
+        } else {
+            TraceLog(LOG_INFO, "Textura carregada com sucesso: %s", caminho);
+        }
     }
 }
 
-PlayerAnimado LoadPlayerFromJSON(const char *jsonPath, const char *playerKey, Vector2 startPos) {
-    PlayerAnimado player = {0};
-    player.position = startPos;
-    player.speed = 4;
-    player.currentDirection = DOWN;
-    player.frameIndex = 0;
-    player.frameTime = 0.15f;
-    player.timer = 0.0f;
 
-    FILE *file = fopen(jsonPath, "rb");
-    if (!file) {
-        TraceLog(LOG_ERROR, "Erro ao abrir JSON: %s", jsonPath);
-        return player;
+Jogador CriarJogador(const char *jsonPath, const char *nome, Vector2 posicaoInicial) {
+    Jogador j = {0};
+    j.posicao = posicaoInicial;
+    j.velocidade = 4;
+    j.direcaoAtual = DOWN;
+    j.indiceFrame = 0;
+    j.tempoFrame = 0.15f;
+    j.temporizador = 0.0f;
+
+    FILE *arquivo = fopen(jsonPath, "rb");
+    if (!arquivo) return j;
+
+    fseek(arquivo, 0, SEEK_END);
+    long tamanho = ftell(arquivo);
+    rewind(arquivo);
+
+    char *dados = malloc(tamanho + 1);
+    fread(dados, 1, tamanho, arquivo);
+    dados[tamanho] = '\0';
+    fclose(arquivo);
+
+    cJSON *raiz = cJSON_Parse(dados);
+    free(dados);
+    if (!raiz) return j;
+
+    cJSON *obj = cJSON_GetObjectItem(raiz, nome);
+    if (!obj) {
+        cJSON_Delete(raiz);
+        return j;
     }
 
-    fseek(file, 0, SEEK_END);
-    long len = ftell(file);
-    rewind(file);
-    char *data = malloc(len + 1);
-    fread(data, 1, len, file);
-    data[len] = '\0';
-    fclose(file);
+    CarregarTexturas(j.cima, cJSON_GetObjectItem(obj, "up"), MAX_FRAMES_CIMA_BAIXO);
+    CarregarTexturas(j.baixo, cJSON_GetObjectItem(obj, "down"), MAX_FRAMES_CIMA_BAIXO);
+    CarregarTexturas(j.esquerda, cJSON_GetObjectItem(obj, "left"), MAX_FRAMES_LADO);
+    CarregarTexturas(j.direita, cJSON_GetObjectItem(obj, "right"), MAX_FRAMES_LADO);
 
-    cJSON *root = cJSON_Parse(data);
-    free(data);
-    if (!root) {
-        TraceLog(LOG_ERROR, "Erro ao fazer parse do JSON");
-        return player;
-    }
-
-    cJSON *playerObj = cJSON_GetObjectItem(root, playerKey);
-    if (!playerObj) {
-        TraceLog(LOG_ERROR, "Chave do jogador nao encontrada: %s", playerKey);
-        cJSON_Delete(root);
-        return player;
-    }
-
-    LoadAnimationTextures(player.up, cJSON_GetObjectItem(playerObj, "up"), MAX_FRAMES_UD);
-    LoadAnimationTextures(player.down, cJSON_GetObjectItem(playerObj, "down"), MAX_FRAMES_UD);
-    LoadAnimationTextures(player.left, cJSON_GetObjectItem(playerObj, "left"), MAX_FRAMES_LR);
-    LoadAnimationTextures(player.right, cJSON_GetObjectItem(playerObj, "right"), MAX_FRAMES_LR);
-
-    cJSON_Delete(root);
-    return player;
+    cJSON_Delete(raiz);
+    return j;
 }
 
-void UpdateAnimation(PlayerAnimado *p) {
-    int maxFrames = (p->currentDirection == LEFT || p->currentDirection == RIGHT) ? MAX_FRAMES_LR : MAX_FRAMES_UD;
-    p->timer += GetFrameTime();
-    if (p->timer >= p->frameTime) {
-        p->frameIndex = (p->frameIndex + 1) % maxFrames;
-        p->timer = 0.0f;
+void AtualizarAnimacao(Jogador *j) {
+    int maxFrames = (j->direcaoAtual == LEFT || j->direcaoAtual == RIGHT)
+                    ? MAX_FRAMES_LADO : MAX_FRAMES_CIMA_BAIXO;
+
+    j->temporizador += GetFrameTime();
+    if (j->temporizador >= j->tempoFrame) {
+        j->indiceFrame = (j->indiceFrame + 1) % maxFrames;
+        j->temporizador = 0.0f;
     }
 }
 
-void DrawPlayer(PlayerAnimado *p) {
-    Texture2D current;
-    switch (p->currentDirection) {
-        case UP: current = p->up[p->frameIndex]; break;
-        case DOWN: current = p->down[p->frameIndex]; break;
-        case LEFT: current = p->left[p->frameIndex]; break;
-        case RIGHT: current = p->right[p->frameIndex]; break;
+void DesenharJogador(Jogador *j) {
+    Texture2D atual;
+    switch (j->direcaoAtual) {
+        case UP: atual = j->cima[j->indiceFrame]; break;
+        case DOWN: atual = j->baixo[j->indiceFrame]; break;
+        case LEFT: atual = j->esquerda[j->indiceFrame]; break;
+        case RIGHT: atual = j->direita[j->indiceFrame]; break;
     }
-    DrawTexture(current, p->position.x, p->position.y, WHITE);
+    DrawTexture(atual, j->posicao.x, j->posicao.y, WHITE);
 }
 
 int main(void) {
-    const int screenWidth = 1280;
-    const int screenHeight = 720;
-    InitWindow(screenWidth, screenHeight, "Coin Hunting");
+    const int largura = 1280;
+    const int altura = 720;
+    InitWindow(largura, altura, "Jogo: Caça às Moedas");
 
-    #define JSON_PATH "sprites/json/movimentaçãoPlayer.json"
+    const char *CAMINHO_JSON = "sprites/json/movimentaçãoPlayer.json";
 
-    PlayerAnimado p1 = LoadPlayerFromJSON(JSON_PATH, "edu_walk", (Vector2){100, 100});
-    PlayerAnimado p2 = LoadPlayerFromJSON(JSON_PATH, "brenda_walk", (Vector2){600, 400});
+    Jogador p1 = CriarJogador(CAMINHO_JSON, "edu_walk", (Vector2){100, 100});
+    Jogador p2 = CriarJogador(CAMINHO_JSON, "brenda_walk", (Vector2){600, 400});
+    Ghost fantasma = CriarFantasma(CAMINHO_JSON, "ghost_walk", (Vector2){300, 300});
 
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
-        bool p1Moving = false;
-        bool p2Moving = false;
+        bool p1Andando = false;
+        bool p2Andando = false;
 
-        // Controles Player 1 (WASD)
-        if (IsKeyDown(KEY_W) && p1.position.y > 0) {
-            p1.position.y -= p1.speed;
-            p1.currentDirection = UP;
-            p1Moving = true;
-        } else if (IsKeyDown(KEY_S) && p1.position.y + p1.down[0].height < screenHeight) {
-            p1.position.y += p1.speed;
-            p1.currentDirection = DOWN;
-            p1Moving = true;
-        } else if (IsKeyDown(KEY_A) && p1.position.x > 0) {
-            p1.position.x -= p1.speed;
-            p1.currentDirection = LEFT;
-            p1Moving = true;
-        } else if (IsKeyDown(KEY_D) && p1.position.x + p1.right[0].width < screenWidth) {
-            p1.position.x += p1.speed;
-            p1.currentDirection = RIGHT;
-            p1Moving = true;
+        AtualizarFantasma(&fantasma, p1.posicao, largura, altura);  // Atualiza o fantasma para perseguir o jogador
+
+        if (IsKeyDown(KEY_W) && p1.posicao.y > 0) {
+            p1.posicao.y -= p1.velocidade;
+            p1.direcaoAtual = UP;
+            p1Andando = true;
+        } else if (IsKeyDown(KEY_S) && p1.posicao.y + p1.baixo[0].height < altura) {
+            p1.posicao.y += p1.velocidade;
+            p1.direcaoAtual = DOWN;
+            p1Andando = true;
+        } else if (IsKeyDown(KEY_A) && p1.posicao.x > 0) {
+            p1.posicao.x -= p1.velocidade;
+            p1.direcaoAtual = LEFT;
+            p1Andando = true;
+        } else if (IsKeyDown(KEY_D) && p1.posicao.x + p1.direita[0].width < largura) {
+            p1.posicao.x += p1.velocidade;
+            p1.direcaoAtual = RIGHT;
+            p1Andando = true;
         }
 
-        // Controles Player 2 (Setas)
-        if (IsKeyDown(KEY_UP) && p2.position.y > 0) {
-            p2.position.y -= p2.speed;
-            p2.currentDirection = UP;
-            p2Moving = true;
-        } else if (IsKeyDown(KEY_DOWN) && p2.position.y + p2.down[0].height < screenHeight) {
-            p2.position.y += p2.speed;
-            p2.currentDirection = DOWN;
-            p2Moving = true;
-        } else if (IsKeyDown(KEY_LEFT) && p2.position.x > 0) {
-            p2.position.x -= p2.speed;
-            p2.currentDirection = LEFT;
-            p2Moving = true;
-        } else if (IsKeyDown(KEY_RIGHT) && p2.position.x + p2.right[0].width < screenWidth) {
-            p2.position.x += p2.speed;
-            p2.currentDirection = RIGHT;
-            p2Moving = true;
+        if (IsKeyDown(KEY_UP) && p2.posicao.y > 0) {
+            p2.posicao.y -= p2.velocidade;
+            p2.direcaoAtual = UP;
+            p2Andando = true;
+        } else if (IsKeyDown(KEY_DOWN) && p2.posicao.y + p2.baixo[0].height < altura) {
+            p2.posicao.y += p2.velocidade;
+            p2.direcaoAtual = DOWN;
+            p2Andando = true;
+        } else if (IsKeyDown(KEY_LEFT) && p2.posicao.x > 0) {
+            p2.posicao.x -= p2.velocidade;
+            p2.direcaoAtual = LEFT;
+            p2Andando = true;
+        } else if (IsKeyDown(KEY_RIGHT) && p2.posicao.x + p2.direita[0].width < largura) {
+            p2.posicao.x += p2.velocidade;
+            p2.direcaoAtual = RIGHT;
+            p2Andando = true;
         }
 
-        if (p1Moving) UpdateAnimation(&p1);
-        else p1.frameIndex = 0;
-
-        if (p2Moving) UpdateAnimation(&p2);
-        else p2.frameIndex = 0;
+        if (p1Andando) AtualizarAnimacao(&p1); else p1.indiceFrame = 0;
+        if (p2Andando) AtualizarAnimacao(&p2); else p2.indiceFrame = 0;
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        DrawPlayer(&p1);
-        DrawPlayer(&p2);
+        DesenharJogador(&p1);
+        DesenharJogador(&p2);
+        DesenharFantasma(&fantasma);
         EndDrawing();
     }
 
-    // Libera texturas
-    for (int i = 0; i < MAX_FRAMES_UD; i++) {
-        UnloadTexture(p1.up[i]);
-        UnloadTexture(p1.down[i]);
-        UnloadTexture(p2.up[i]);
-        UnloadTexture(p2.down[i]);
-        if (i < MAX_FRAMES_LR) {
-            UnloadTexture(p1.left[i]);
-            UnloadTexture(p1.right[i]);
-            UnloadTexture(p2.left[i]);
-            UnloadTexture(p2.right[i]);
+   
+    for (int i = 0; i < MAX_FRAMES_CIMA_BAIXO; i++) {
+        UnloadTexture(p1.cima[i]);
+        UnloadTexture(p1.baixo[i]);
+        UnloadTexture(p2.cima[i]);
+        UnloadTexture(p2.baixo[i]);
+        if (i < MAX_FRAMES_LADO) {
+            UnloadTexture(p1.esquerda[i]);
+            UnloadTexture(p1.direita[i]);
+            UnloadTexture(p2.esquerda[i]);
+            UnloadTexture(p2.direita[i]);
         }
     }
 
+    UnloadGhost(&fantasma);
     CloseWindow();
     return 0;
 }
