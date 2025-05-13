@@ -7,7 +7,7 @@ SRC = main.c cJSON.c ghost.c
 OBJ = $(SRC:.c=.o)
 
 %.o: %.c
-    $(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 
 jogo: $(OBJ)
