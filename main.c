@@ -89,7 +89,7 @@ void DesenharJogador(Jogador *j) {
 int main(void) {
     const int largura = 1280;
     const int altura = 720;
-    InitWindow(largura, altura, "Jogo: Caça às Moedas");
+    InitWindow(largura, altura, "CoinHunting");
     TelaAtual tela = MENU;
     Rectangle botaoIniciar = { largura / 2 - 100, 200, 200, 50 };
 
@@ -97,7 +97,7 @@ int main(void) {
 
     const char *CAMINHO_JSON = "sprites/json/movimentaçãoPlayer.json";
     Texture2D background = LoadTexture("sprites/png/BackgroundMenu.png");
-    Texture2D fundoJogo = LoadTexture("sprites/png/backgroundJogo.png");
+    Texture2D fundoJogo = LoadTexture("sprites/png/backgroundJogo3.png");
 
     Jogador p1 = CriarJogador(CAMINHO_JSON, "edu_walk", (Vector2){100, 100});
     Jogador p2 = CriarJogador(CAMINHO_JSON, "brenda_walk", (Vector2){600, 400});
@@ -161,7 +161,20 @@ int main(void) {
             if (p1Andando) AtualizarAnimacao(&p1); else p1.indiceFrame = 0;
             if (p2Andando) AtualizarAnimacao(&p2); else p2.indiceFrame = 0;
 
-            DrawTexture(fundoJogo, 0, 0, WHITE);
+            int margem = 80; // valor que define quanto da borda será cortado
+            DrawTexturePro(
+                fundoJogo,
+                (Rectangle){
+                    margem, margem,
+                    fundoJogo.width - 2 * margem,
+                    fundoJogo.height - 2 * margem
+                },
+                (Rectangle){ 0, 0, largura, altura },
+                (Vector2){ 0, 0 },
+                0.0f,
+                WHITE
+            );
+       
 
             DesenharJogador(&p1);
             DesenharJogador(&p2);
