@@ -5,7 +5,6 @@
 #include "ghost.h"
 #include "menu.h"
 
-
 #define MAX_FRAMES_CIMA_BAIXO 6
 #define MAX_FRAMES_LADO 4
 
@@ -22,7 +21,6 @@ typedef struct {
     Texture2D esquerda[MAX_FRAMES_LADO];
     Texture2D direita[MAX_FRAMES_LADO];
 } Jogador;
-
 
 Jogador CriarJogador(const char *jsonPath, const char *nome, Vector2 posicaoInicial) {
     Jogador j = {0};
@@ -95,12 +93,11 @@ int main(void) {
     TelaAtual tela = MENU;
     Rectangle botaoIniciar = { largura / 2 - 100, altura / 2, 200, 50 };
 
-
-    SetTraceLogLevel(LOG_INFO);  
+    SetTraceLogLevel(LOG_INFO);
 
     const char *CAMINHO_JSON = "sprites/json/movimentaçãoPlayer.json";
     Texture2D background = LoadTexture("BackgroundMenu.png");
-
+    Texture2D fundoJogo = LoadTexture("sprites/png/backgroundJogo.png");
 
     Jogador p1 = CriarJogador(CAMINHO_JSON, "edu_walk", (Vector2){100, 100});
     Jogador p2 = CriarJogador(CAMINHO_JSON, "brenda_walk", (Vector2){600, 400});
@@ -159,21 +156,19 @@ int main(void) {
             AtualizarMenu(botaoIniciar, &tela);
             DesenharMenu(botaoIniciar, background);
         } else if (tela == JOGO) {
-
             AtualizarFantasma(&fantasma, p1.posicao, largura, altura);
-
 
             if (p1Andando) AtualizarAnimacao(&p1); else p1.indiceFrame = 0;
             if (p2Andando) AtualizarAnimacao(&p2); else p2.indiceFrame = 0;
 
-            ClearBackground(RAYWHITE);
+            DrawTexture(fundoJogo, 0, 0, WHITE);
+
             DesenharJogador(&p1);
             DesenharJogador(&p2);
             DesenharFantasma(&fantasma);
         }
 
         EndDrawing();
-
     }
 
     for (int i = 0; i < MAX_FRAMES_CIMA_BAIXO; i++) {
@@ -190,6 +185,7 @@ int main(void) {
     }
 
     UnloadTexture(background);
+    UnloadTexture(fundoJogo); // Libera textura do fundo do jogo
     DestruirFantasma(&fantasma);
     CloseWindow();
     return 0;
