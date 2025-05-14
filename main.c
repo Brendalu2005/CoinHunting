@@ -96,7 +96,7 @@ int main(void) {
     SetTraceLogLevel(LOG_INFO);
 
     const char *CAMINHO_JSON = "sprites/json/movimentaçãoPlayer.json";
-    Texture2D background = LoadTexture("BackgroundMenu.png");
+    Texture2D background = LoadTexture("sprites/png/BackgroundMenu.png");
     Texture2D fundoJogo = LoadTexture("sprites/png/backgroundJogo.png");
 
     Jogador p1 = CriarJogador(CAMINHO_JSON, "edu_walk", (Vector2){100, 100});
