@@ -91,7 +91,7 @@ int main(void) {
     const int altura = 720;
     InitWindow(largura, altura, "Jogo: Caça às Moedas");
     TelaAtual tela = MENU;
-    Rectangle botaoIniciar = { largura / 2 - 100, altura / 2, 200, 50 };
+    Rectangle botaoIniciar = { largura / 2 - 100, 200, 200, 50 };
 
     SetTraceLogLevel(LOG_INFO);
 
@@ -153,8 +153,8 @@ int main(void) {
         BeginDrawing();
 
         if (tela == MENU) {
-            AtualizarMenu(botaoIniciar, &tela);
             DesenharMenu(botaoIniciar, background);
+            AtualizarMenu(botaoIniciar, &tela);
         } else if (tela == JOGO) {
             AtualizarFantasma(&fantasma, p1.posicao, largura, altura);
 
