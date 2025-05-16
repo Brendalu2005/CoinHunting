@@ -1,10 +1,10 @@
 
-EXEC = CoinHunting
+EXEC = main
 
 SRC_DIR = src
 INCLUDE_DIR = include
 
-SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/ghost.c $(SRC_DIR)/menu.c $(SRC_DIR)/cJSON.c
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/ghost.c $(SRC_DIR)/menu.c $(SRC_DIR)/cJSON.c $(SRC_DIR)/game.c
 
 CC = gcc
 
@@ -19,3 +19,4 @@ $(EXEC): $(SRCS)
 
 clean:
 	rm -f $(EXEC)
+

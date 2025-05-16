@@ -13,11 +13,12 @@ int main(void)
 
     const char *JSON = "sprites/json/movimentaçãoPlayer.json";
     Texture2D bgMenu  = LoadTexture("sprites/png/BackgroundMenu.png");
-    Texture2D bgJogo  = LoadTexture("sprites/png/backgroundJogo3.png");
+    Texture2D bgJogo  = LoadTexture("sprites/png/backgroundJogo.png");
 
     Jogador p1 = CriarJogador(JSON, "edu_walk",    (Vector2){100,100});
     Jogador p2 = CriarJogador(JSON, "brenda_walk", (Vector2){600,400});
     Ghost   fantasma = CriarFantasma(JSON, "ghost_walk", (Vector2){300,300});
+
 
     while (!WindowShouldClose()) {
         if (tela == MENU) {

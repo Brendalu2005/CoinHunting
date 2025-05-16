@@ -9,7 +9,7 @@ int main(void) {
     InitWindow(screenWidth, screenHeight, "CoinHunting");
 
     // Carrega a imagem de fundo
-    Texture2D fundo = LoadTexture("sprites/png/backgroundJogo2.png");
+    Texture2D fundo = LoadTexture("sprites/png/backgroundJogo.png");
 
     // Verifica se a imagem foi carregada corretamente
     if (fundo.id == 0) {
