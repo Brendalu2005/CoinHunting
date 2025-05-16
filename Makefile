@@ -4,7 +4,8 @@ EXEC = main
 SRC_DIR = src
 INCLUDE_DIR = include
 
-SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/ghost.c $(SRC_DIR)/menu.c $(SRC_DIR)/cJSON.c $(SRC_DIR)/game.c
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/ghost.c $(SRC_DIR)/menu.c $(SRC_DIR)/cJSON.c $(SRC_DIR)/game.c $(SRC_DIR)/moeda.c
+
 
 CC = gcc
 
