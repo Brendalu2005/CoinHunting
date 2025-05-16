@@ -27,7 +27,12 @@ Ghost CriarFantasma(const char *caminhoJSON, const char *chaveFantasma, Vector2 
     long size = ftell(f);
     rewind(f);
     char *data = malloc(size + 1);
-    fread(data, 1, size, f);
+    if (fread(data, 1, size, f) != size) {
+        free(data);
+        fclose(f);
+        return g;
+    }
+    
     data[size] = '\0';
     fclose(f);
 

@@ -1,0 +1,34 @@
+#ifndef JOGADOR_H
+#define JOGADOR_H
+
+#include "raylib.h"
+#include "fixo.h"
+#include <stdbool.h>
+
+typedef enum { UP, DOWN, LEFT, RIGHT } Direction;
+
+typedef struct {
+    Vector2  posicao;
+    float    velocidade;
+    Direction direcaoAtual;
+    float    tempoFrame;
+    float    temporizador;
+    int      indiceFrame;
+
+    Texture2D cima   [MAX_FRAMES_CIMA_BAIXO];
+    Texture2D baixo  [MAX_FRAMES_CIMA_BAIXO];
+    Texture2D esquerda[MAX_FRAMES_LADO];
+    Texture2D direita [MAX_FRAMES_LADO];
+} Jogador;
+
+Jogador CriarJogador(const char *jsonPath, const char *nomeNoJson, Vector2     posicaoInicial);
+
+void    AtualizarJogador(Jogador *j, int upKey, int downKey,
+                         int leftKey, int rightKey,
+                         int larguraTela, int alturaTela);
+
+void    AtualizarAnimacao(Jogador *j, bool estaAndando);
+void    DesenharJogador (Jogador *j);
+void    DestruirJogador (Jogador *j);
+
+#endif

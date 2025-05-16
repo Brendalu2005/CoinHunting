@@ -3,15 +3,16 @@
 
 #include "raylib.h"
 #include "cJSON.h"
+#include "game.h"
 
 #define MAX_GHOST_FRAMES 10  
 
-typedef enum {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
-} Direction;
+// typedef enum {
+//     UP,
+//     DOWN,
+//     LEFT,
+//     RIGHT
+// } Direction;
 
 
 typedef struct {

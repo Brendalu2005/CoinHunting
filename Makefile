@@ -1,9 +1,21 @@
-CC = gcc
-CFLAGS = -Wall -std=c99 -O2
-LDFLAGS = -lraylib -lm -ldl -lpthread -lGL -lrt -lX11
 
-main: main.c cJSON.c ghost.c
-	$(CC) $(CFLAGS) -o main main.c menu.c ghost.c cJSON.c $(LDFLAGS)
+EXEC = CoinHunting
+
+SRC_DIR = src
+INCLUDE_DIR = include
+
+SRCS = $(SRC_DIR)/main.c $(SRC_DIR)/ghost.c $(SRC_DIR)/menu.c $(SRC_DIR)/cJSON.c
+
+CC = gcc
+
+INCLUDES = -I$(SRC_DIR) -I$(INCLUDE_DIR)
+
+CFLAGS = -Wall -std=c99 -O2 $(INCLUDES) -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+
+all: $(EXEC)
+
+$(EXEC): $(SRCS)
+	$(CC) $(SRCS) -o $(EXEC) $(CFLAGS)
 
 clean:
-	rm -f main
+	rm -f $(EXEC)

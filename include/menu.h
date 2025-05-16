@@ -3,11 +3,8 @@
 #define MENU_H
 
 #include "raylib.h"
+#include "game.h"
 
-typedef enum {
-    MENU,
-    JOGO
-} TelaAtual;
 
 void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual);
 void DesenharMenu(Rectangle botao, Texture2D background);

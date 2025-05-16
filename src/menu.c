@@ -1,5 +1,4 @@
 #include "menu.h"
-
 void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual) {
     Vector2 mouse = GetMousePosition();
 
