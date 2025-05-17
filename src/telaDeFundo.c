@@ -1,30 +1,30 @@
 #include "raylib.h"
 
 int main(void) {
-    // Define a resolução da janela
+    
     const int screenWidth = 1920;
     const int screenHeight = 1080;
 
-    // Inicializa a janela
+    
     InitWindow(screenWidth, screenHeight, "CoinHunting");
 
-    // Carrega a imagem de fundo
+   
     Texture2D fundo = LoadTexture("sprites/png/backgroundJogo.png");
 
-    // Verifica se a imagem foi carregada corretamente
+    
     if (fundo.id == 0) {
         TraceLog(LOG_ERROR, "Erro ao carregar imagem de fundo.");
         CloseWindow();
         return 1;
     }
 
-    // Loop principal
+    
     while (!WindowShouldClose()) {
         BeginDrawing();
 
-        ClearBackground(BLACK); // Cor de fundo para fallback
+        ClearBackground(BLACK); 
 
-        // Redimensiona e desenha o fundo
+       
         DrawTexturePro(
             fundo,
             (Rectangle){ 0, 0, (float)fundo.width, (float)fundo.height },
@@ -34,12 +34,11 @@ int main(void) {
             WHITE
         );
 
-        // Aqui você pode desenhar outras coisas, como o personagem, HUD, etc.
-
+        
         EndDrawing();
     }
 
-    // Libera os recursos
+    
     UnloadTexture(fundo);
     CloseWindow();
 
