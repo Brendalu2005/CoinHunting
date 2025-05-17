@@ -38,6 +38,8 @@ int main(void)
             
             colisaoMoedas(moedas, &p1);  
             colisaoMoedas(moedas, &p2);  
+            VerificarColisaoFantasma(&fantasma, &p1);
+            VerificarColisaoFantasma(&fantasma, &p2);   
             
         }
 

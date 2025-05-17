@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include "fixo.h"
 
 void CarregarTexturas(Texture2D *imagens, const cJSON *array, int *quantidade) {
     *quantidade = cJSON_GetArraySize(array);
@@ -106,4 +107,15 @@ void DestruirFantasma(Ghost *g) {
         Texture2D *sprites[] = { g->up, g->down, g->left, g->right };
         for (int i = 0; i < g->frameCount[d]; i++) UnloadTexture(sprites[d][i]);
     }
+}
+
+bool VerificarColisaoFantasma(Ghost *g, Jogador *j) {
+    Rectangle retJogador = { j->posicao.x, j->posicao.y, 32, 32 };
+    Rectangle retFantasma = { g->position.x, g->position.y, g->right[0].width, g->down[0].height };
+
+    if (CheckCollisionRecs(retJogador, retFantasma)) {
+        j->posicao = (Vector2){ WINDOW_WIDTH/2.0f, WINDOW_HEIGHT/2.0f };
+        return true;
+    }
+    return false;
 }
