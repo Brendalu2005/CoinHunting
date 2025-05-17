@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
-
+#include "game.h"
 
 Texture2D moedaPrataTex;
 Texture2D moedaOuroTex;
@@ -83,4 +83,20 @@ void DesenharMoedas(Moeda moedas[]) {
         }
     }
 }
+void colisaoMoedas(Moeda moedas[], Jogador *jogador) {
+    for (int i = 0; i < MAX_MOEDAS; i++) {
+        if (moedas[i].ativa) {
+            Rectangle rectMoeda = { moedas[i].posicao.x, moedas[i].posicao.y, 32, 32 };
+            Rectangle rectPlayer = { jogador->posicao.x, jogador->posicao.y, 32, 32 }; 
 
+            if (CheckCollisionRecs(rectMoeda, rectPlayer)) {
+                moedas[i].ativa = false;
+
+                if (moedas[i].tipo == PRATA)
+                    jogador->moedasPrata++;
+                else
+                    jogador->moedasOuro++;
+            }
+        }
+    }
+}

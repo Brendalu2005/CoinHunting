@@ -14,7 +14,8 @@ typedef struct {
     float    tempoFrame;
     float    temporizador;
     int      indiceFrame;
-
+    int     moedasPrata;
+    int     moedasOuro;
     Texture2D cima   [MAX_FRAMES_CIMA_BAIXO];
     Texture2D baixo  [MAX_FRAMES_CIMA_BAIXO];
     Texture2D esquerda[MAX_FRAMES_LADO];

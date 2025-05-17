@@ -2,7 +2,7 @@
 #define COIN_H
 
 #include "raylib.h"
-
+#include "game.h"
 #define MAX_MOEDAS 20
 
 typedef enum { PRATA, OURO } TipoMoeda;
@@ -11,7 +11,7 @@ typedef struct {
     Vector2 posicao;
     bool ativa;
     TipoMoeda tipo;
-    float tempoVida;  // novo: tempo em segundos que a moeda está ativa
+    float tempoVida; 
 } Moeda;
 
 extern Texture2D moedaPrataTex;
@@ -22,5 +22,6 @@ void AtualizarMoedas(Moeda moedas[], float *tempoRespawn);
 void DesenharMoedas(Moeda moedas[]);
 void CarregarTexturasMoedas(void);
 void UnloadTexturasMoedas(void);
+void colisaoMoedas(Moeda moedas[], Jogador *jogador);
 
 #endif
