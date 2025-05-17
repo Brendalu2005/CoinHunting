@@ -6,7 +6,8 @@
 #include "game.h"
 
 
-void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual);
-void DesenharMenu(Rectangle botao, Texture2D background);
+void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual, int *opcao);
+void DesenharMenu(Rectangle botao, Texture2D background, int opcao);
+
 
 #endif

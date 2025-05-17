@@ -24,10 +24,12 @@ int main(void)
     float tempoRespawn = 0.0f;
     InicializarMoedas(moedas);
     CarregarTexturasMoedas();
+    int opcao = 0;
+
 
     while (!WindowShouldClose()) {
         if (tela == MENU) {
-            AtualizarMenu(botaoIniciar, &tela);
+            AtualizarMenu(botaoIniciar, &tela, &opcao);
         } else if (tela == JOGO) {
             AtualizarFantasma(&fantasma, p1.posicao, WINDOW_WIDTH, WINDOW_HEIGHT);
             AtualizarJogador(&p1, KEY_W, KEY_S, KEY_A, KEY_D, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -41,7 +43,7 @@ int main(void)
 
         BeginDrawing();
         if (tela == MENU) {
-            DesenharMenu(botaoIniciar, bgMenu);
+            DesenharMenu(botaoIniciar, bgMenu, opcao);
         } else if (tela == JOGO) {
             int m = 80;
             DrawTexturePro(bgJogo,
