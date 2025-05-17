@@ -44,6 +44,7 @@ int main(void)
         }
 
         BeginDrawing();
+        ClearBackground(RAYWHITE);
         if (tela == MENU) {
             DesenharMenu(botaoIniciar, bgMenu, opcao);
         } else if (tela == JOGO) {
