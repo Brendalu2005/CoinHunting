@@ -12,7 +12,7 @@ void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual, int *opcao) {
     if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
         switch (*opcao) {
             case 0:
-                *telaAtual = JOGO;
+                *telaAtual =  SELECAO;
                 break;
             case 1:
                 // ação para "SOBRE"
@@ -25,7 +25,7 @@ void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual, int *opcao) {
     Vector2 mouse = GetMousePosition();
 
     if (CheckCollisionPointRec(mouse, botao) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        *telaAtual = JOGO;
+        *telaAtual = SELECAO;
     }
 }
 

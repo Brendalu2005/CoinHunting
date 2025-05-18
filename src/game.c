@@ -65,9 +65,7 @@ void AtualizarAnimacao(Jogador *j, bool andando)
     }
 }
 
-void AtualizarJogador(Jogador *j, int upKey, int downKey,
-                      int leftKey, int rightKey,
-                      int largura, int altura)
+void AtualizarJogador(Jogador *j, int upKey, int downKey,int leftKey, int rightKey, int largura, int altura)
 {
     bool andando = false;
 

@@ -87,7 +87,8 @@ void colisaoMoedas(Moeda moedas[], Jogador *jogador) {
     for (int i = 0; i < MAX_MOEDAS; i++) {
         if (moedas[i].ativa) {
             Rectangle rectMoeda = { moedas[i].posicao.x, moedas[i].posicao.y, 32, 32 };
-            Rectangle rectPlayer = { jogador->posicao.x, jogador->posicao.y, 32, 32 }; 
+            Rectangle rectPlayer = { jogador->posicao.x + 4, jogador->posicao.y + 4, 24, 24 };
+
 
             if (CheckCollisionRecs(rectMoeda, rectPlayer)) {
                 moedas[i].ativa = false;

@@ -8,7 +8,7 @@ OBJ_DIR = object
 LIBRARY_PATH = /usr/local/lib64
 
 
-SRC = main.c cJSON.c ghost.c menu.c game.c moeda.c 
+SRC = main.c cJSON.c ghost.c menu.c game.c moeda.c selecao.c
 SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
 
 

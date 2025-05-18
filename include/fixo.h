@@ -7,6 +7,10 @@
 #define MAX_FRAMES_CIMA_BAIXO 6
 #define MAX_FRAMES_LADO       4
 
-typedef enum { MENU, JOGO } TelaAtual;
+typedef enum { 
+    MENU,
+    SELECAO, 
+    JOGO 
+} TelaAtual;
 
 #endif

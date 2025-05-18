@@ -3,6 +3,8 @@
 #include "ghost.h"
 #include "menu.h"
 #include "moeda.h"
+#include "selecao.h"
+
 
 int main(void)
 {
@@ -11,6 +13,9 @@ int main(void)
 
     TelaAtual tela = MENU;
     Rectangle botaoIniciar = { WINDOW_WIDTH/2 - 100, 200, 200, 50 };
+    Rectangle botao1Jogador = { WINDOW_WIDTH/2 - 110, 200, 220, 50 };
+    Rectangle botao2Jogadores = { WINDOW_WIDTH/2 - 110, 270, 220, 50 };
+
 
     const char *JSON = "sprites/json/movimentaçãoPlayer.json";
     Texture2D bgMenu  = LoadTexture("sprites/png/BackgroundMenu.png");
@@ -18,6 +23,7 @@ int main(void)
 
     Jogador p1 = CriarJogador(JSON, "edu_walk",    (Vector2){100,100});
     Jogador p2 = CriarJogador(JSON, "brenda_walk", (Vector2){600,400});
+    Jogador p3 = CriarJogador(JSON, "guto_walk", (Vector2){100,100});
     Ghost   fantasma = CriarFantasma(JSON, "ghost_walk", (Vector2){300,300});
 
     Moeda moedas[MAX_MOEDAS];
@@ -29,17 +35,28 @@ int main(void)
 
     while (!WindowShouldClose()) {
         if (tela == MENU) {
+            DesenharMenu(botaoIniciar, bgMenu, opcao);
             AtualizarMenu(botaoIniciar, &tela, &opcao);
+        }else if (tela == SELECAO) {
+            DesenharSelecaoJogadores(botao1Jogador, botao2Jogadores, bgMenu);
+            AtualizarSelecaoJogadores(botao1Jogador, botao2Jogadores, &tela, &opcao);
+
         } else if (tela == JOGO) {
+            AtualizarMoedas(moedas, &tempoRespawn);
+           if (opcao == 1) {
+            AtualizarFantasma(&fantasma, p3.posicao, WINDOW_WIDTH, WINDOW_HEIGHT);
+            AtualizarJogador(&p3, KEY_W, KEY_S, KEY_A, KEY_D, WINDOW_WIDTH, WINDOW_HEIGHT);
+            colisaoMoedas(moedas, &p3);  
+            VerificarColisaoFantasma(&fantasma, &p3);
+        } else if (opcao == 2) {
             AtualizarFantasma(&fantasma, p1.posicao, WINDOW_WIDTH, WINDOW_HEIGHT);
             AtualizarJogador(&p1, KEY_W, KEY_S, KEY_A, KEY_D, WINDOW_WIDTH, WINDOW_HEIGHT);
             AtualizarJogador(&p2, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, WINDOW_WIDTH, WINDOW_HEIGHT);
-            AtualizarMoedas(moedas, &tempoRespawn);
-            
             colisaoMoedas(moedas, &p1);  
             colisaoMoedas(moedas, &p2);  
             VerificarColisaoFantasma(&fantasma, &p1);
-            VerificarColisaoFantasma(&fantasma, &p2);   
+            VerificarColisaoFantasma(&fantasma, &p2);
+        }
             
         }
 
@@ -48,18 +65,19 @@ int main(void)
         if (tela == MENU) {
             DesenharMenu(botaoIniciar, bgMenu, opcao);
         } else if (tela == JOGO) {
-            int m = 80;
-            DrawTexturePro(bgJogo,
-               (Rectangle){m, m, bgJogo.width - 2 * m, bgJogo.height - 2 * m},
-               (Rectangle){0, 0, WINDOW_WIDTH, WINDOW_HEIGHT},
-               (Vector2){0, 0}, 0, WHITE);
-
-            DesenharJogador(&p1);
-            DesenharJogador(&p2);
-            DesenharFantasma(&fantasma);
+            DrawTexture(bgJogo, 0, 0, WHITE);
             DesenharMoedas(moedas); 
-            DrawText(TextFormat("P1 - Ouro: %d  Prata: %d", p1.moedasOuro, p1.moedasPrata), 10, 10, 20, GOLD);
-            DrawText(TextFormat("P2 - Ouro: %d  Prata: %d", p2.moedasOuro, p2.moedasPrata), 10, 40, 20, SKYBLUE);
+            DesenharFantasma(&fantasma);
+
+            if (opcao == 1) {
+                DesenharJogador(&p3);
+                DrawText(TextFormat("P1 - Ouro: %d  Prata: %d", p3.moedasOuro, p3.moedasPrata), 10, 10, 20, GOLD);
+            } else if (opcao == 2) {
+                DesenharJogador(&p1);
+                DesenharJogador(&p2);
+                DrawText(TextFormat("P1 - Ouro: %d  Prata: %d", p1.moedasOuro, p1.moedasPrata), 10, 10, 20, GOLD);
+                DrawText(TextFormat("P2 - Ouro: %d  Prata: %d", p2.moedasOuro, p2.moedasPrata), 10, 40, 20, SKYBLUE);
+            }
 
         }
         EndDrawing();
@@ -67,6 +85,8 @@ int main(void)
 
     DestruirJogador(&p1);
     DestruirJogador(&p2);
+    DestruirJogador(&p3);
+
     DestruirFantasma(&fantasma);
     UnloadTexturasMoedas(); 
     UnloadTexture(bgMenu);
