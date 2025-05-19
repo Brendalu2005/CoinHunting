@@ -13,7 +13,7 @@ void AtualizarSelecaoJogadores(Rectangle botao1, Rectangle botao2, TelaAtual *te
         *opcao = (*opcao - 1 + TOTAL_OPCOES_SELECAO) % TOTAL_OPCOES_SELECAO;
     }
 
-    if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
+    if ((IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) && (*opcao == 1 || *opcao == 2)) {
         *tela = JOGO;
     }
 
@@ -26,6 +26,7 @@ void AtualizarSelecaoJogadores(Rectangle botao1, Rectangle botao2, TelaAtual *te
         } else if (CheckCollisionPointRec(mouse, botao2)) {
             *opcao = 2;
             *tela = JOGO;
+            
         }
     }
 }
@@ -60,3 +61,37 @@ void DesenharSelecaoJogadores(Rectangle botao1, Rectangle botao2, Texture2D back
     DrawRectangle(x, y2, largura, altura, (opcao == 1) ? corSelecionada : corNormal);
     DrawText("2 JOGADORES", x + 30, y2 + 15, 20, BLACK);
 }
+void AtualizarSobre(TelaAtual *tela) {
+    if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE)) {
+        *tela = MENU;
+    }
+}
+
+void DesenharSobre(Texture2D background) {
+    DrawTexturePro(
+        background,
+        (Rectangle){ 0, 0, background.width, background.height },
+        (Rectangle){ 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() },
+        (Vector2){ 0, 0 },
+        0.0f,
+        WHITE
+    );
+
+    const char *titulo = "Sobre o Jogo";
+    const char *descricao = "Ajude os exploradores a coletarem o máximo de moedas possivel\n sem ser atingido pelo fantasma protetor da caverna.\n";
+    const char *descricao2 =
+        "Controles:\n"
+        "Jogador 1: W A S D \n"
+        "Jogador 2: Setas direcionais";
+
+    int fonteTitulo = 30;
+    int fonteDescricao = 20;
+    int larguraTitulo = MeasureText(titulo, fonteTitulo);
+    int larguraDescricao = MeasureText(descricao, fonteDescricao);
+
+    int larguraDescricao2 = MeasureText(descricao2, fonteDescricao);
+    DrawText(titulo, (GetScreenWidth() - larguraTitulo) / 2, 100, fonteTitulo, DARKGRAY);
+    DrawText(descricao, (GetScreenWidth() - larguraDescricao) / 2, 200, fonteDescricao, GRAY);
+    DrawText(descricao2, (GetScreenWidth() - larguraDescricao2) / 2, 260, fonteDescricao, GRAY);
+}
+

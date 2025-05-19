@@ -15,7 +15,7 @@ void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual, int *opcao) {
                 *telaAtual =  SELECAO;
                 break;
             case 1:
-                // ação para "SOBRE"
+                *telaAtual =  SOBRE;
                 break;
             case 2:
                 // ação para "RANKING"
@@ -23,9 +23,27 @@ void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual, int *opcao) {
         }
     }
     Vector2 mouse = GetMousePosition();
+    int largura = 200;
+    int altura = 50;
+    int x = GetScreenWidth() / 2 - largura / 2;
+    int yBase = 200;
 
-    if (CheckCollisionPointRec(mouse, botao) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        *telaAtual = SELECAO;
+    for (int i = 0; i < TOTAL_OPCOES_MENU; i++) {
+        Rectangle botaoOp = { x, yBase + i * 70, largura, altura };
+        if (CheckCollisionPointRec(mouse, botaoOp) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            *opcao = i;
+            switch (i) {
+                case 0:
+                    *telaAtual = SELECAO;
+                    break;
+                case 1:
+                    *telaAtual = SOBRE;
+                    break;
+                case 2:
+                    // *telaAtual = RANKING;
+                    break;
+            }
+        }
     }
 }
 

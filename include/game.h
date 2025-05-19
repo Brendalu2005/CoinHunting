@@ -22,7 +22,7 @@ typedef struct {
     Texture2D direita [MAX_FRAMES_LADO];
 } Jogador;
 
-Jogador CriarJogador(const char *jsonPath, const char *nomeNoJson, Vector2     posicaoInicial);
+Jogador CriarJogador(const char *jsonPath, const char *nomeNoJson, Vector2 posicaoInicial);
 
 void    AtualizarJogador(Jogador *j, int upKey, int downKey,
                          int leftKey, int rightKey,
