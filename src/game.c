@@ -100,8 +100,8 @@ void DesenharJogador(Jogador *j)
         case RIGHT: txt = j->direita [j->indiceFrame]; break;
     }
     DrawTexture(txt, j->posicao.x, j->posicao.y, WHITE);
-}
 
+}
 void DestruirJogador(Jogador *j)
 {
     for (int i = 0; i < MAX_FRAMES_CIMA_BAIXO; i++) {

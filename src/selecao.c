@@ -44,7 +44,7 @@ void DesenharSelecaoJogadores(Rectangle botao1, Rectangle botao2, Texture2D back
     const char *titulo = "Selecione o número de jogadores:";
     int fonteTitulo = 30;
     int larguraTitulo = MeasureText(titulo, fonteTitulo);
-    DrawText(titulo, (GetScreenWidth() - larguraTitulo) / 2, 100, fonteTitulo, DARKGRAY);
+    DrawText(titulo, (GetScreenWidth() - larguraTitulo) / 2, 100, fonteTitulo, WHITE);
 
     int largura = 220;
     int altura = 50;
@@ -90,8 +90,8 @@ void DesenharSobre(Texture2D background) {
     int larguraDescricao = MeasureText(descricao, fonteDescricao);
 
     int larguraDescricao2 = MeasureText(descricao2, fonteDescricao);
-    DrawText(titulo, (GetScreenWidth() - larguraTitulo) / 2, 100, fonteTitulo, DARKGRAY);
-    DrawText(descricao, (GetScreenWidth() - larguraDescricao) / 2, 200, fonteDescricao, GRAY);
-    DrawText(descricao2, (GetScreenWidth() - larguraDescricao2) / 2, 260, fonteDescricao, GRAY);
+    DrawText(titulo, (GetScreenWidth() - larguraTitulo) / 2, 100, fonteTitulo, WHITE);
+    DrawText(descricao, (GetScreenWidth() - larguraDescricao) / 2, 200, fonteDescricao, WHITE);
+    DrawText(descricao2, (GetScreenWidth() - larguraDescricao2) / 2, 260, fonteDescricao, WHITE);
 }
 

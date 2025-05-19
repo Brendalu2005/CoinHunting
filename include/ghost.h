@@ -6,14 +6,6 @@
 #include "game.h"
 
 #define MAX_GHOST_FRAMES 10  
-
-// typedef enum {
-    //     UP,
-    //     DOWN,
-    //     LEFT,
-    //     RIGHT
-    // } Direction;
-    
     
     typedef struct {
         Vector2 position; 

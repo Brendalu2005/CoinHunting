@@ -70,14 +70,12 @@
       "sprites/png/gutodireita1.png",
       "sprites/png/gutodireita2.png",
       "sprites/png/gutodireita3.png"
-      
     ],
     "left": [
       "sprites/png/gutoesquerda2.png",
       "sprites/png/gutoesquerda1.png",
       "sprites/png/gutoesquerda2.png",
       "sprites/png/gutoesquerda3.png"
-     
     ],
     "up": [
       "sprites/png/gutofrente3.png",
@@ -86,8 +84,6 @@
       "sprites/png/gutofrente3.png",
       "sprites/png/gutofrente4.png",
       "sprites/png/gutofrente5.png"
-      
-      
     ],
     "down": [
       "sprites/png/gutotras5.png",
@@ -96,11 +92,6 @@
       "sprites/png/gutotras5.png",
       "sprites/png/gutotras3.png",
       "sprites/png/gutotras4.png"
-      
-      
-      
-      
-
     ]
   },
   "ghost_walk": {
@@ -123,12 +114,10 @@
     "up": [
       "sprites/png/ghostfrente.png",
       "sprites/png/ghostfrente.png"
-
     ],
     "down": [
       "sprites/png/ghosttras.png",
       "sprites/png/ghosttras.png"
-
     ]
   }
 }

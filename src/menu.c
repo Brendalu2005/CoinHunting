@@ -18,7 +18,6 @@ void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual, int *opcao) {
                 *telaAtual =  SOBRE;
                 break;
             case 2:
-                // ação para "RANKING"
                 break;
         }
     }
@@ -40,7 +39,6 @@ void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual, int *opcao) {
                     *telaAtual = SOBRE;
                     break;
                 case 2:
-                    // *telaAtual = RANKING;
                     break;
             }
         }
