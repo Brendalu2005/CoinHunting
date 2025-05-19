@@ -59,10 +59,19 @@ int main(void) {
                 DesenharMenu(botaoIniciar, bgMenu, opcaoMenu);
                 break;
 
-            case SELECAO:
+                case SELECAO:
                 AtualizarSelecaoJogadores(botao1Jogador, botao2Jogadores, &tela, &opcaojogadores);
                 DesenharSelecaoJogadores(botao1Jogador, botao2Jogadores, bgMenu, opcaojogadores);
+            
+                if (tela == JOGO) {
+                    if (opcaojogadores == 0 || opcaojogadores == 1) {
+                        opcaojogadores += 1;
+                    } else {
+                        opcaojogadores = 1;
+                    }
+                }
                 break;
+            
 
             case SOBRE:
                 AtualizarSobre(&tela);

@@ -5,7 +5,6 @@
 
 void AtualizarSelecaoJogadores(Rectangle botao1, Rectangle botao2, TelaAtual *tela, int *opcao)
 {
-    
     if (IsKeyPressed(KEY_DOWN)) {
         *opcao = (*opcao + 1) % TOTAL_OPCOES_SELECAO;
     }
@@ -13,25 +12,22 @@ void AtualizarSelecaoJogadores(Rectangle botao1, Rectangle botao2, TelaAtual *te
         *opcao = (*opcao - 1 + TOTAL_OPCOES_SELECAO) % TOTAL_OPCOES_SELECAO;
     }
 
-    if ((IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE))) {
-        *opcao += 1; 
+    if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
         *tela = JOGO;
     }
-    
 
-    
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
         Vector2 mouse = GetMousePosition();
         if (CheckCollisionPointRec(mouse, botao1)) {
-            *opcao = 1;
+            *opcao = 0;
             *tela = JOGO;
         } else if (CheckCollisionPointRec(mouse, botao2)) {
-            *opcao = 2;
+            *opcao = 1;
             *tela = JOGO;
-            
         }
     }
 }
+
 
 void DesenharSelecaoJogadores(Rectangle botao1, Rectangle botao2, Texture2D background, int opcao){
     DrawTexturePro(
