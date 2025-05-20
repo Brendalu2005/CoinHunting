@@ -12,8 +12,15 @@ void AtualizarSelecaoJogadores(Rectangle botao1, Rectangle botao2, TelaAtual *te
         *opcao = (*opcao - 1 + TOTAL_OPCOES_SELECAO) % TOTAL_OPCOES_SELECAO;
     }
 
-    if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
+   if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_SPACE)) {
         *tela = JOGO;
+       
+        if (*opcao == 0){
+            *opcao = 1; 
+        }  
+        else if (*opcao == 1){
+            *opcao = 2;
+        }   
     }
 
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {

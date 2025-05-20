@@ -10,7 +10,8 @@
 typedef enum { 
     MENU,
     SELECAO,
-    SOBRE, 
+    SOBRE,
+    RANKING, 
     JOGO 
 } TelaAtual;
 

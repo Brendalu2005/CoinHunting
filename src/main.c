@@ -4,6 +4,7 @@
 #include "menu.h"
 #include "moeda.h"
 #include "selecao.h"
+#include "ranking.h"
 #include <stdio.h>
 #include <math.h>
 
@@ -31,10 +32,16 @@ int main(void) {
     InicializarMoedas(moedas);
     CarregarTexturasMoedas();
 
+    struct Ranking *ranking = CarregarRanking();
+
+    char nomeJogador[TAM_NOME];
+    bool solicitandoNome = false;
+    int indexLetra = 0;
+
     int opcaoMenu = 0;
     int opcaojogadores = -1;
 
-    int tempoRestante = 180;
+    int tempoRestante = 40; // TEMPO DE JOGO
     float tempoAcumulado = 0.0f;
 
     bool jogoFinalizado = false;
@@ -59,23 +66,34 @@ int main(void) {
                 DesenharMenu(botaoIniciar, bgMenu, opcaoMenu);
                 break;
 
-                case SELECAO:
+            case SELECAO:
                 AtualizarSelecaoJogadores(botao1Jogador, botao2Jogadores, &tela, &opcaojogadores);
                 DesenharSelecaoJogadores(botao1Jogador, botao2Jogadores, bgMenu, opcaojogadores);
-            
-                if (tela == JOGO) {
-                    if (opcaojogadores == 0 || opcaojogadores == 1) {
-                        opcaojogadores += 1;
-                    } else {
-                        opcaojogadores = 1;
-                    }
-                }
                 break;
-            
 
             case SOBRE:
                 AtualizarSobre(&tela);
                 DesenharSobre(bgMenu);
+                break;
+
+            case RANKING:
+                DesenharRanking(&ranking);
+                if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_ENTER)) {
+                    
+                    // reiniciando aqui
+                    tela = MENU;
+                    opcaojogadores = -1;
+                    jogoFinalizado = false;
+                    solicitandoNome = false;
+
+                    InicializarMoedas(moedas);
+                    p1.moedasPrata = p1.moedasOuro = 0;
+                    p2.moedasPrata = p2.moedasOuro = 0;
+                    p3.moedasPrata = p3.moedasOuro = 0;
+
+                    tempoRestante = 180;
+                    tempoAcumulado = 0.0f;
+                }
                 break;
 
             case JOGO:
@@ -102,16 +120,16 @@ int main(void) {
 
                     if (opcaojogadores == 1) {
                         DesenharJogador(&p3); 
-                        int pontuacao = p3.moedasPrata * 1 + p3.moedasOuro * 2;
+                        int pontuacao = p3.moedasPrata + p3.moedasOuro * 2;
                         DrawText(TextFormat("P1 - Pontuação: %d", pontuacao), 10, 10, 20, GOLD);
-                    } else if (opcaojogadores == 2) {
+                    } else {
                         DesenharJogador(&p1);
                         DesenharJogador(&p2);
-                        int pontuacao1 = p1.moedasPrata * 1 + p1.moedasOuro * 2;
-                        int pontuacao2 = p2.moedasPrata * 1 + p2.moedasOuro * 2;
-                        DrawText(TextFormat("P1 - Pontuação: %d", pontuacao1), 10, 10, 20, GOLD);
-                        int larguraTexto = MeasureText(TextFormat("P2 - Pontuação: %d", pontuacao2), 20);
-                        DrawText(TextFormat("P2 - Pontuação: %d", pontuacao2), GetScreenWidth() - larguraTexto - 10, 10, 20, SKYBLUE);
+                        int p1Pts = p1.moedasPrata + p1.moedasOuro * 2;
+                        int p2Pts = p2.moedasPrata + p2.moedasOuro * 2;
+                        DrawText(TextFormat("P1 - Pontuação: %d", p1Pts), 10, 10, 20, GOLD);
+                        int l = MeasureText(TextFormat("P2 - Pontuação: %d", p2Pts), 20);
+                        DrawText(TextFormat("P2 - Pontuação: %d", p2Pts), GetScreenWidth() - l - 10, 10, 20, SKYBLUE);
                     }
 
                     int minutos = tempoRestante / 60;
@@ -121,46 +139,96 @@ int main(void) {
                     int larguraTimer = MeasureText(textoTimer, 30);
 
                     Color corTimer = WHITE;
-
                     if (tempoRestante <= 30) {
                         float alpha = 0.5f + 0.5f * sinf(GetTime() * 6.0f);
                         corTimer = (Color){255, 0, 0, (unsigned char)(alpha * 255)};
-                    }
-                    else if (tempoRestante <= 60) {
+                    } else if (tempoRestante <= 60){
                         corTimer = ORANGE;
-                    }
-                    else if (tempoRestante <= 100) {
+                    } else if (tempoRestante <= 100){
                         corTimer = YELLOW;
-                    }
-                    
-                    DrawText(textoTimer, GetScreenWidth() / 2 - larguraTimer / 2, 10, 30, corTimer);
+                    } 
 
+                    DrawText(textoTimer, GetScreenWidth()/2 - larguraTimer/2, 10, 30, corTimer);
 
                     if (tempoRestante <= 0) {
                         jogoFinalizado = true;
                         tempoFimDeJogo = 0.0f;
                     }
+
                 } else {
+                    int caixaLargura = 400;
+                    int caixaAltura = 250;
+                    int caixaX = GetScreenWidth()/2 - caixaLargura/2;
+                    int caixaY = GetScreenHeight()/2 - caixaAltura/2;
+
+                    DrawRectangle(caixaX, caixaY, caixaLargura, caixaAltura, Fade(BLACK, 0.7f));
+                    DrawRectangleLines(caixaX, caixaY, caixaLargura, caixaAltura, WHITE);
+
+                    
                     const char* msg = "FIM DE JOGO";
                     int largura = MeasureText(msg, 50);
-                    DrawText(msg, GetScreenWidth() / 2 - largura / 2, GetScreenHeight() / 2 - 25, 50, RED);
+                    DrawText(msg, GetScreenWidth() / 2 - largura / 2, caixaY + 15, 50, RED);
+
+                    
+                    if (opcaojogadores == 2) {
+                        int pontos1 = p1.moedasPrata + p1.moedasOuro * 2;
+                        int pontos2 = p2.moedasPrata + p2.moedasOuro * 2;
+
+                        const char* vencedor = (pontos1 > pontos2) ? "P1 Venceu!" :
+                                            (pontos2 > pontos1) ? "P2 Venceu!" : "Empate!";
+                        int larguraV = MeasureText(vencedor, 30);
+                        DrawText(vencedor, GetScreenWidth() / 2 - larguraV / 2, caixaY + 75, 30, GREEN);
+                    }
+
+                    
+                    DrawText("Digite seu nome (até 4 letras):", caixaX + 30, caixaY + 125, 20, WHITE);
+
+                    
+                    DrawRectangle(caixaX + 30, caixaY + 155, caixaLargura - 60, 40, DARKGRAY);
+                    DrawRectangleLines(caixaX + 30, caixaY + 155, caixaLargura - 60, 40, RAYWHITE);
+
+                   
+                    DrawText(nomeJogador, caixaX + 40, caixaY + 160, 30, YELLOW);
 
                     tempoFimDeJogo += GetFrameTime();
+
                     if (tempoFimDeJogo >= duracaoFimDeJogo) {
-                        tela = MENU;
+                        if (!solicitandoNome) {
+                            solicitandoNome = true;
+                            indexLetra = 0;
+                            for (int i = 0; i < 6; i++) {
+                                nomeJogador[i] = '\0';
+                            }
+                        }
+                    }
+
+                    int key = GetCharPressed();
+                    if (key >= 32 && key <= 125 && indexLetra < 5) {
+                        nomeJogador[indexLetra++] = (char)key;
+                    }
+
+                    if (IsKeyPressed(KEY_BACKSPACE) && indexLetra > 0) {
+                        nomeJogador[--indexLetra] = '\0';
+                    }
+
+                    if (IsKeyPressed(KEY_ENTER) && indexLetra > 0) {
+                        int pontos = 0;
+                        if (opcaojogadores == 1) {
+                            pontos = p3.moedasPrata + p3.moedasOuro * 2;
+                        } else {
+                            int pontos1 = p1.moedasPrata + p1.moedasOuro * 2;
+                            int pontos2 = p2.moedasPrata + p2.moedasOuro * 2;
+                            pontos = (pontos1 > pontos2) ? pontos1 : pontos2;
+                        }
+
+                        AdicionarAoRanking(&ranking, nomeJogador, pontos);
+                        SalvarRanking(&ranking);
+                        solicitandoNome = false;
+
+                        tela = RANKING;
                         opcaojogadores = -1;
-                        jogoFinalizado = false;
-
-                        InicializarMoedas(moedas);
-                        p1.moedasPrata = p1.moedasOuro = 0;
-                        p2.moedasPrata = p2.moedasOuro = 0;
-                        p3.moedasPrata = p3.moedasOuro = 0;
-
-                        tempoRestante = 180;
-                        tempoAcumulado = 0.0f;
                     }
                 }
-
                 break;
         }
 
@@ -174,6 +242,8 @@ int main(void) {
     UnloadTexturasMoedas(); 
     UnloadTexture(bgMenu);
     UnloadTexture(bgJogo);
+    SalvarRanking(&ranking);
+    LiberarRanking(&ranking);
     CloseWindow();
 
     return 0;
