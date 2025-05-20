@@ -10,6 +10,16 @@
 Texture2D moedaPrataTex;
 Texture2D moedaOuroTex;
 
+Sound somMoeda;
+
+void CarregarSonsMoedas(void) {
+    somMoeda = LoadSound("audio/coinCatch.wav");
+}
+
+void DescarregarSonsMoedas(void) {
+    UnloadSound(somMoeda);
+}
+
 void CarregarTexturasMoedas(void) {
     moedaPrataTex = LoadTexture("sprites/png/moeda_prata.png");
     moedaOuroTex  = LoadTexture("sprites/png/moeda_ouro.png");
@@ -52,10 +62,7 @@ void AtualizarMoedas(Moeda moedas[], float *tempoRespawn) {
     for (int i = 0; i < MAX_MOEDAS; i++) {
         if (moedas[i].ativa) {
             moedas[i].tempoVida += GetFrameTime();
-
-            if (moedas[i].tempoVida >= TEMPO_VIDA_MOEDA) {
-                moedas[i].ativa = false;
-            }
+            if (moedas[i].tempoVida >= TEMPO_VIDA_MOEDA) moedas[i].ativa = false;
         }
     }
 }
@@ -70,27 +77,26 @@ void DesenharMoedas(Moeda moedas[]) {
 
         if (tempoRestante <= 2.0f) {
             float piscar = fmodf(GetTime(), 0.4f);
-            if (piscar < 0.2f) {
-                cor.a = 100;
-            }
+            if (piscar < 0.2f) cor.a = 100;
         }
 
-        if (moedas[i].tipo == OURO) {
+        if (moedas[i].tipo == OURO)
             DrawTextureEx(tex, moedas[i].posicao, 0.0f, 1.2f, cor);
-        } else {
+        else
             DrawTextureV(tex, moedas[i].posicao, cor);
-        }
     }
 }
 
-void colisaoMoedas(Moeda moedas[], Jogador *jogador) {
+void colisaoMoedas(Moeda moedas[], Jogador *jogador, Sound somMoeda) {
     for (int i = 0; i < MAX_MOEDAS; i++) {
-        if (moedas[i].ativa && 
-            CheckCollisionCircles(jogador->posicao, 16, moedas[i].posicao, 14)) {
-            
-            if (moedas[i].tipo == OURO) jogador->moedasOuro++;
-            else jogador->moedasPrata++;
-
+        if (moedas[i].ativa && CheckCollisionCircles(jogador->posicao, 16, moedas[i].posicao, 14)) {
+            if (moedas[i].tipo == OURO) {
+                jogador->moedasOuro++;
+                PlaySound(somMoeda);
+            } else {
+                jogador->moedasPrata++;
+                PlaySound(somMoeda);
+            }
             moedas[i].ativa = false;
         }
     }

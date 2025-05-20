@@ -10,8 +10,8 @@ SRCS = $(SRC_DIR)/main.c \
        $(SRC_DIR)/cJSON.c \
        $(SRC_DIR)/game.c \
        $(SRC_DIR)/moeda.c \
-       $(SRC_DIR)/selecao.c   
-
+       $(SRC_DIR)/selecao.c \
+       $(SRC_DIR)/ranking.c \
 
 CC = gcc
 

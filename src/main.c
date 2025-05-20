@@ -9,6 +9,8 @@
 #include <math.h>
 
 int main(void) {
+
+    InitAudioDevice();
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "CoinHunting");
     SetTargetFPS(60);
 
@@ -21,6 +23,18 @@ int main(void) {
     const char *JSON = "sprites/json/movimentaçãoPlayer.json";
     Texture2D bgMenu = LoadTexture("sprites/png/BackgroundMenu.png");
     Texture2D bgJogo = LoadTexture("sprites/png/backgroundJogo.png");
+
+    Music musicaMenu    = LoadMusicStream("audio/musicaTelasIniciais.mp3");
+    Music musicaMenu2   = LoadMusicStream("audio/musicaTelasIniciais2.mp3");
+    Music musicaMenu3   = LoadMusicStream("audio/musicaTelasIniciais3.mp3");
+    Music musicaMenu4   = LoadMusicStream("audio/musicaTelasIniciais4.mp3");
+    Music musicaPartida = LoadMusicStream("audio/musicaPartida.mp3");
+    Music musicaPartida2= LoadMusicStream("audio/musicaPartida2.mp3");
+
+    Sound somMoeda = LoadSound("audio/coinCatch.wav");
+    Sound somColisao = LoadSound("audio/ghostColisao.wav");
+
+    PlayMusicStream(musicaMenu);
 
     Jogador p1 = CriarJogador(JSON, "edu_walk",    (Vector2){100, 100});
     Jogador p2 = CriarJogador(JSON, "brenda_walk", (Vector2){600, 400});
@@ -41,7 +55,7 @@ int main(void) {
     int opcaoMenu = 0;
     int opcaojogadores = -1;
 
-    int tempoRestante = 40; // TEMPO DE JOGO
+    int tempoRestante = 180; 
     float tempoAcumulado = 0.0f;
 
     bool jogoFinalizado = false;
@@ -60,7 +74,25 @@ int main(void) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
+        UpdateMusicStream(musicaMenu);
+        UpdateMusicStream(musicaPartida2);
+
+        if (tela == JOGO) {
+            if (!IsMusicStreamPlaying(musicaPartida2)) {
+                StopMusicStream(musicaMenu);
+                PlayMusicStream(musicaPartida2);
+            }
+            UpdateMusicStream(musicaPartida2);
+        } else {
+            if (!IsMusicStreamPlaying(musicaMenu)) {
+                StopMusicStream(musicaPartida2);
+                PlayMusicStream(musicaMenu);
+            }
+            UpdateMusicStream(musicaMenu);
+        }
+
         switch (tela) {
+
             case MENU:
                 AtualizarMenu(botaoIniciar, &tela, &opcaoMenu);
                 DesenharMenu(botaoIniciar, bgMenu, opcaoMenu);
@@ -80,7 +112,6 @@ int main(void) {
                 DesenharRanking(&ranking);
                 if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_ENTER)) {
                     
-                    // reiniciando aqui
                     tela = MENU;
                     opcaojogadores = -1;
                     jogoFinalizado = false;
@@ -106,16 +137,16 @@ int main(void) {
                     if (opcaojogadores == 1) {
                         AtualizarFantasma(&fantasma, p3.posicao, WINDOW_WIDTH, WINDOW_HEIGHT);
                         AtualizarJogador(&p3, KEY_W, KEY_S, KEY_A, KEY_D, WINDOW_WIDTH, WINDOW_HEIGHT);
-                        colisaoMoedas(moedas, &p3);  
-                        VerificarColisaoFantasma(&fantasma, &p3);
+                        colisaoMoedas(moedas, &p3, somMoeda);  
+                        VerificarColisaoFantasma(&fantasma, &p3, somColisao);
                     } else if (opcaojogadores == 2) {
                         AtualizarFantasma(&fantasma, p1.posicao, WINDOW_WIDTH, WINDOW_HEIGHT);
                         AtualizarJogador(&p1, KEY_W, KEY_S, KEY_A, KEY_D, WINDOW_WIDTH, WINDOW_HEIGHT);
                         AtualizarJogador(&p2, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, WINDOW_WIDTH, WINDOW_HEIGHT);
-                        colisaoMoedas(moedas, &p1);  
-                        colisaoMoedas(moedas, &p2);  
-                        VerificarColisaoFantasma(&fantasma, &p1);
-                        VerificarColisaoFantasma(&fantasma, &p2);
+                        colisaoMoedas(moedas, &p1, somMoeda);  
+                        colisaoMoedas(moedas, &p2, somMoeda); 
+                        VerificarColisaoFantasma(&fantasma, &p1, somColisao);
+                        VerificarColisaoFantasma(&fantasma, &p2, somColisao);
                     }
 
                     if (opcaojogadores == 1) {
@@ -244,6 +275,11 @@ int main(void) {
     UnloadTexture(bgJogo);
     SalvarRanking(&ranking);
     LiberarRanking(&ranking);
+    UnloadMusicStream(musicaMenu);
+    UnloadMusicStream(musicaPartida2);
+    UnloadSound(somMoeda);
+    UnloadSound(somColisao);
+    CloseAudioDevice();
     CloseWindow();
 
     return 0;

@@ -16,12 +16,15 @@ typedef struct {
 
 extern Texture2D moedaPrataTex;
 extern Texture2D moedaOuroTex;
+extern Sound somMoeda;
 
 void InicializarMoedas(Moeda moedas[]);
 void AtualizarMoedas(Moeda moedas[], float *tempoRespawn);
 void DesenharMoedas(Moeda moedas[]);
 void CarregarTexturasMoedas(void);
 void UnloadTexturasMoedas(void);
-void colisaoMoedas(Moeda moedas[], Jogador *jogador);
+void CarregarSonsMoedas(void);
+void DescarregarSonsMoedas(void);
+void colisaoMoedas(Moeda moedas[], Jogador *jogador, Sound somMoeda);
 
 #endif

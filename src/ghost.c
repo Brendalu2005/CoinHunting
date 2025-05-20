@@ -6,6 +6,16 @@
 #include <time.h>
 #include "fixo.h"
 
+Sound somSusto;
+
+void CarregarSomFantasma(void) {
+    somSusto = LoadSound("audio/ghostColisao.wav");
+}
+
+void DescarregarSomFantasma(void) {
+    UnloadSound(somSusto);
+}
+
 void CarregarTexturas(Texture2D *imagens, const cJSON *array, int *quantidade) {
     *quantidade = cJSON_GetArraySize(array);
     for (int i = 0; i < *quantidade; i++) {
@@ -70,24 +80,10 @@ void AtualizarFantasma(Ghost *g, Vector2 jogadorPos, float largura, float altura
     float w = g->right[0].width;
     float h = g->down[0].height;
 
-    if (g->currentDirection == UP    && g->position.y > 0){
-        g->position.y -= g->speed;
-    }              
-        
-    if (g->currentDirection == DOWN  && g->position.y + h < altura){
-        g->position.y += g->speed;
-
-    }    
-        
-    if (g->currentDirection == LEFT  && g->position.x > 0){
-         g->position.x -= g->speed;
-
-    }              
-       
-    if (g->currentDirection == RIGHT && g->position.x + w < largura){
-        g->position.x += g->speed;
-    }    
-        
+    if (g->currentDirection == UP    && g->position.y > 0)               g->position.y -= g->speed;
+    if (g->currentDirection == DOWN  && g->position.y + h < altura)      g->position.y += g->speed;
+    if (g->currentDirection == LEFT  && g->position.x > 0)               g->position.x -= g->speed;
+    if (g->currentDirection == RIGHT && g->position.x + w < largura)     g->position.x += g->speed;
 
     int total = g->frameCount[g->currentDirection];
     if (total > 1 && g->timer >= g->frameTime) {
@@ -109,11 +105,12 @@ void DestruirFantasma(Ghost *g) {
     }
 }
 
-bool VerificarColisaoFantasma(Ghost *g, Jogador *j) {
+bool VerificarColisaoFantasma(Ghost *g, Jogador *j, Sound somSusto) {
     Rectangle retJogador = { j->posicao.x, j->posicao.y, 32, 32 };
     Rectangle retFantasma = { g->position.x, g->position.y, g->right[0].width, g->down[0].height };
 
     if (CheckCollisionRecs(retJogador, retFantasma)) {
+        PlaySound(somSusto);
         j->posicao = (Vector2){ WINDOW_WIDTH/2.0f, WINDOW_HEIGHT/2.0f };
         return true;
     }
