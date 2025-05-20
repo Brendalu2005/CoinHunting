@@ -36,9 +36,9 @@ int main(void) {
 
     PlayMusicStream(musicaMenu);
 
-    Jogador p1 = CriarJogador(JSON, "edu_walk",    (Vector2){100, 100});
-    Jogador p2 = CriarJogador(JSON, "brenda_walk", (Vector2){600, 400});
-    Jogador p3 = CriarJogador(JSON, "guto_walk",   (Vector2){100, 100});
+    Jogador p1 = CriarJogador(JSON, "edu_walk",    (Vector2){560, 360});
+    Jogador p2 = CriarJogador(JSON, "brenda_walk", (Vector2){680, 360});
+    Jogador p3 = CriarJogador(JSON, "guto_walk",   (Vector2){640, 360});
     ListaFantasmas fantasmas;
     InicializarListaFantasmas(&fantasmas, "sprites/json/movimentaçãoPlayer.json", "ghost_walk");
     
