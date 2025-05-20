@@ -12,6 +12,7 @@ SRCS = $(SRC_DIR)/main.c \
        $(SRC_DIR)/moeda.c \
        $(SRC_DIR)/selecao.c \
        $(SRC_DIR)/ranking.c \
+       $(SRC_DIR)/audio.c
 
 CC = gcc
 

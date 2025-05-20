@@ -10,7 +10,6 @@ float tempoVidaMoeda = 13.0f;
 Texture2D moedaPrataTex;
 Texture2D moedaOuroTex;
 
-Sound somMoeda;
 
 void CarregarSonsMoedas(void) {
     somMoeda = LoadSound("audio/coinCatch.wav");

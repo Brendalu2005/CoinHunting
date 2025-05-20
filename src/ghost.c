@@ -6,16 +6,6 @@
 #include <time.h>
 #include "fixo.h"
 
-Sound somSusto;
-
-void CarregarSomFantasma(void) {
-    somSusto = LoadSound("audio/ghostColisao.wav");
-}
-
-void DescarregarSomFantasma(void) {
-    UnloadSound(somSusto);
-}
-
 void CarregarTexturas(Texture2D *imagens, const cJSON *array, int *quantidade) {
     *quantidade = cJSON_GetArraySize(array);
     for (int i = 0; i < *quantidade; i++) {

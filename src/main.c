@@ -7,12 +7,14 @@
 #include "ranking.h"
 #include <stdio.h>
 #include <math.h>
+#include "audio.h"
 
 int main(void) {
 
     InitAudioDevice();
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "CoinHunting");
     SetTargetFPS(60);
+    CarregarSons();
 
     TelaAtual tela = MENU;
 
@@ -24,24 +26,11 @@ int main(void) {
     Texture2D bgMenu = LoadTexture("sprites/png/BackgroundMenu.png");
     Texture2D bgJogo = LoadTexture("sprites/png/backgroundJogo.png");
 
-    Music musicaMenu    = LoadMusicStream("audio/musicaTelasIniciais.mp3");
-    // Music musicaMenu2   = LoadMusicStream("audio/musicaTelasIniciais2.mp3");
-    // Music musicaMenu3   = LoadMusicStream("audio/musicaTelasIniciais3.mp3");
-    // Music musicaMenu4   = LoadMusicStream("audio/musicaTelasIniciais4.mp3");
-    // Music musicaPartida = LoadMusicStream("audio/musicaPartida.mp3");
-    Music musicaPartida2= LoadMusicStream("audio/musicaPartida2.mp3");
-
-    Sound somMoeda = LoadSound("audio/coinCatch.wav");
-    Sound somColisao = LoadSound("audio/ghostColisao.wav");
-
-    PlayMusicStream(musicaMenu);
-
     Jogador p1 = CriarJogador(JSON, "edu_walk",    (Vector2){560, 360});
     Jogador p2 = CriarJogador(JSON, "brenda_walk", (Vector2){680, 360});
     Jogador p3 = CriarJogador(JSON, "guto_walk",   (Vector2){640, 360});
     ListaFantasmas fantasmas;
     InicializarListaFantasmas(&fantasmas, "sprites/json/movimentaçãoPlayer.json", "ghost_walk");
-    
 
     Moeda moedas[MAX_MOEDAS];
     float tempoRespawn = 0.0f;
@@ -77,17 +66,17 @@ int main(void) {
         ClearBackground(RAYWHITE);
 
         UpdateMusicStream(musicaMenu);
-        UpdateMusicStream(musicaPartida2);
+        UpdateMusicStream(musicaPartida);
 
         if (tela == JOGO) {
-            if (!IsMusicStreamPlaying(musicaPartida2)) {
+            if (!IsMusicStreamPlaying(musicaPartida)) {
                 StopMusicStream(musicaMenu);
-                PlayMusicStream(musicaPartida2);
+                PlayMusicStream(musicaPartida);
             }
-            UpdateMusicStream(musicaPartida2);
+            UpdateMusicStream(musicaPartida);
         } else {
             if (!IsMusicStreamPlaying(musicaMenu)) {
-                StopMusicStream(musicaPartida2);
+                StopMusicStream(musicaPartida);
                 PlayMusicStream(musicaMenu);
             }
             UpdateMusicStream(musicaMenu);
@@ -223,7 +212,6 @@ int main(void) {
                         int larguraV = MeasureText(vencedor, 30);
                         DrawText(vencedor, GetScreenWidth() / 2 - larguraV / 2, caixaY + 75, 30, GREEN);
                     }
-
                     
                     DrawText("Digite seu nome (até 4 letras):", caixaX + 30, caixaY + 125, 20, WHITE);
 
@@ -288,10 +276,7 @@ int main(void) {
     UnloadTexture(bgJogo);
     SalvarRanking(&ranking);
     LiberarRanking(&ranking);
-    UnloadMusicStream(musicaMenu);
-    UnloadMusicStream(musicaPartida2);
-    UnloadSound(somMoeda);
-    UnloadSound(somColisao);
+    DescarregarSons();
     CloseAudioDevice();
     CloseWindow();
 
