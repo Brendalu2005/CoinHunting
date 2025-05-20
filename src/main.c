@@ -24,7 +24,7 @@ int main(void) {
 
     const char *JSON = "sprites/json/movimentaçãoPlayer.json";
     Texture2D bgMenu = LoadTexture("sprites/png/BackgroundMenu.png");
-    Texture2D bgJogo = LoadTexture("sprites/png/backgroundAzul1.png");
+    Texture2D bgJogo = LoadTexture("sprites/png/background2.png");
 
     Jogador p1 = CriarJogador(JSON, "edu_walk",    (Vector2){560, 360});
     Jogador p2 = CriarJogador(JSON, "brenda_walk", (Vector2){680, 360});
