@@ -28,22 +28,6 @@ void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual, int *opcao) {
     int x = GetScreenWidth() / 2 - largura / 2;
     int yBase = 200;
 
-    for (int i = 0; i < TOTAL_OPCOES_MENU; i++) {
-        Rectangle botaoOp = { x, yBase + i * 70, largura, altura };
-        if (CheckCollisionPointRec(mouse, botaoOp) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-            *opcao = i;
-            switch (i) {
-                case 0:
-                    *telaAtual = SELECAO;
-                    break;
-                case 1:
-                    *telaAtual = SOBRE;
-                    break;
-                case 2:
-                    break;
-            }
-        }
-    }
 }
 
 void DesenharMenu(Rectangle botao, Texture2D background, int opcao) {

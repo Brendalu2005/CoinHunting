@@ -23,16 +23,7 @@ void AtualizarSelecaoJogadores(Rectangle botao1, Rectangle botao2, TelaAtual *te
         }   
     }
 
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-        Vector2 mouse = GetMousePosition();
-        if (CheckCollisionPointRec(mouse, botao1)) {
-            *opcao = 0;
-            *tela = JOGO;
-        } else if (CheckCollisionPointRec(mouse, botao2)) {
-            *opcao = 1;
-            *tela = JOGO;
-        }
-    }
+
 }
 
 
