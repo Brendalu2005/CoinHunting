@@ -24,7 +24,7 @@ int main(void) {
 
     const char *JSON = "sprites/json/movimentaçãoPlayer.json";
     Texture2D bgMenu = LoadTexture("sprites/png/BackgroundMenu.png");
-    Texture2D bgJogo = LoadTexture("sprites/png/backgroundJogo.png");
+    Texture2D bgJogo = LoadTexture("sprites/png/backgroundAzul1.png");
 
     Jogador p1 = CriarJogador(JSON, "edu_walk",    (Vector2){560, 360});
     Jogador p2 = CriarJogador(JSON, "brenda_walk", (Vector2){680, 360});
@@ -121,7 +121,14 @@ int main(void) {
             case JOGO:
                 float tempoTotalJogo = GetTime();
                 AtualizarMoedas(moedas, &tempoRespawn, tempoTotalJogo);
-                DrawTexture(bgJogo, 0, 0, WHITE);
+                DrawTexturePro(
+                    bgJogo,
+                    (Rectangle){ 0, 0, (float)bgJogo.width, (float)bgJogo.height },
+                    (Rectangle){ 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() },
+                    (Vector2){ 0, 0 },
+                    0.0f,
+                    WHITE
+                );
                 DesenharMoedas(moedas); 
                 DesenharListaFantasmas(&fantasmas);
 
