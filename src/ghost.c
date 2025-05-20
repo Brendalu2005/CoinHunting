@@ -26,7 +26,7 @@ void CarregarTexturas(Texture2D *imagens, const cJSON *array, int *quantidade) {
 Ghost CriarFantasma(const char *caminhoJSON, const char *chaveFantasma, Vector2 posicaoInicial) {
     Ghost g = {0};
     g.position = posicaoInicial;
-    g.speed = 2;
+    g.speed = 4;
     g.currentDirection = DOWN;
     g.frameTime = 0.2f;
     g.moveCooldown = 1.5f;
@@ -115,4 +115,36 @@ bool VerificarColisaoFantasma(Ghost *g, Jogador *j, Sound somSusto) {
         return true;
     }
     return false;
+}
+void InicializarListaFantasmas(ListaFantasmas *lista, const char *caminhoJSON, const char *chaveFantasma) {
+    lista->quantidade = 1;
+    lista->tempoDesdeUltimo = 0.0f;
+    lista->fantasmas[0] = CriarFantasma(caminhoJSON, chaveFantasma, (Vector2){ 300, 300 });
+}
+
+void AtualizarListaFantasmas(ListaFantasmas *lista, Vector2 jogadorPos, int largura, int altura, float delta) {
+    lista->tempoDesdeUltimo += delta;
+
+    if (lista->tempoDesdeUltimo >= 30.0f && lista->quantidade < MAX_FANTASMAS) {
+        lista->fantasmas[lista->quantidade] = CriarFantasma("sprites/json/movimentaçãoPlayer.json", "ghost_walk",
+            (Vector2){ rand() % (largura - 64), rand() % (altura - 64) });
+        lista->quantidade++;
+        lista->tempoDesdeUltimo = 0.0f;
+    }
+
+    for (int i = 0; i < lista->quantidade; i++) {
+        AtualizarFantasma(&lista->fantasmas[i], jogadorPos, largura, altura);
+    }
+}
+
+void DesenharListaFantasmas(ListaFantasmas *lista) {
+    for (int i = 0; i < lista->quantidade; i++) {
+        DesenharFantasma(&lista->fantasmas[i]);
+    }
+}
+
+void DestruirListaFantasmas(ListaFantasmas *lista) {
+    for (int i = 0; i < lista->quantidade; i++) {
+        DestruirFantasma(&lista->fantasmas[i]);
+    }
 }

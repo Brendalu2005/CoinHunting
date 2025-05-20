@@ -6,7 +6,8 @@
 #include "game.h"
 
 #define MAX_GHOST_FRAMES 10  
-    
+#define MAX_FANTASMAS 50
+
 typedef struct {
     Vector2 position; 
     float speed;   
@@ -16,7 +17,7 @@ typedef struct {
     int frameIndex;  
     float moveCooldown;  
     float moveTimer;  
-        
+    
     Texture2D up[MAX_GHOST_FRAMES]; 
     Texture2D down[MAX_GHOST_FRAMES];  
     Texture2D left[MAX_GHOST_FRAMES];  
@@ -24,6 +25,16 @@ typedef struct {
     
     int frameCount[4]; 
 } Ghost;
+typedef struct {
+    Ghost fantasmas[MAX_FANTASMAS];
+    int quantidade;
+    float tempoDesdeUltimo;
+} ListaFantasmas;
+
+void InicializarListaFantasmas(ListaFantasmas *lista, const char *caminhoJSON, const char *chaveFantasma);
+void AtualizarListaFantasmas(ListaFantasmas *lista, Vector2 jogadorPos, int largura, int altura, float delta);
+void DesenharListaFantasmas(ListaFantasmas *lista);
+void DestruirListaFantasmas(ListaFantasmas *lista);
 
 void CarregarTexturas(Texture2D *imagens, const cJSON *array, int *quantidade);
 Ghost CriarFantasma(const char *caminhoJSON, const char *chaveFantasma, Vector2 posicaoInicial);

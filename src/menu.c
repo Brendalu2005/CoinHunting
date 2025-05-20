@@ -22,11 +22,8 @@ void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual, int *opcao) {
                 break;
         }
     }
-    Vector2 mouse = GetMousePosition();
-    int largura = 200;
-    int altura = 50;
-    int x = GetScreenWidth() / 2 - largura / 2;
-    int yBase = 200;
+    
+
 
 }
 

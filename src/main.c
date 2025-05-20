@@ -25,10 +25,10 @@ int main(void) {
     Texture2D bgJogo = LoadTexture("sprites/png/backgroundJogo.png");
 
     Music musicaMenu    = LoadMusicStream("audio/musicaTelasIniciais.mp3");
-    Music musicaMenu2   = LoadMusicStream("audio/musicaTelasIniciais2.mp3");
-    Music musicaMenu3   = LoadMusicStream("audio/musicaTelasIniciais3.mp3");
-    Music musicaMenu4   = LoadMusicStream("audio/musicaTelasIniciais4.mp3");
-    Music musicaPartida = LoadMusicStream("audio/musicaPartida.mp3");
+    // Music musicaMenu2   = LoadMusicStream("audio/musicaTelasIniciais2.mp3");
+    // Music musicaMenu3   = LoadMusicStream("audio/musicaTelasIniciais3.mp3");
+    // Music musicaMenu4   = LoadMusicStream("audio/musicaTelasIniciais4.mp3");
+    // Music musicaPartida = LoadMusicStream("audio/musicaPartida.mp3");
     Music musicaPartida2= LoadMusicStream("audio/musicaPartida2.mp3");
 
     Sound somMoeda = LoadSound("audio/coinCatch.wav");
@@ -39,7 +39,9 @@ int main(void) {
     Jogador p1 = CriarJogador(JSON, "edu_walk",    (Vector2){100, 100});
     Jogador p2 = CriarJogador(JSON, "brenda_walk", (Vector2){600, 400});
     Jogador p3 = CriarJogador(JSON, "guto_walk",   (Vector2){100, 100});
-    Ghost fantasma = CriarFantasma(JSON, "ghost_walk", (Vector2){300, 300});
+    ListaFantasmas fantasmas;
+    InicializarListaFantasmas(&fantasmas, "sprites/json/movimentaçãoPlayer.json", "ghost_walk");
+    
 
     Moeda moedas[MAX_MOEDAS];
     float tempoRespawn = 0.0f;
@@ -131,22 +133,36 @@ int main(void) {
                 AtualizarMoedas(moedas, &tempoRespawn);
                 DrawTexture(bgJogo, 0, 0, WHITE);
                 DesenharMoedas(moedas); 
-                DesenharFantasma(&fantasma);
+                DesenharListaFantasmas(&fantasmas);
+
 
                 if (!jogoFinalizado) {
                     if (opcaojogadores == 1) {
-                        AtualizarFantasma(&fantasma, p3.posicao, WINDOW_WIDTH, WINDOW_HEIGHT);
+                        AtualizarListaFantasmas(&fantasmas, p3.posicao, WINDOW_WIDTH, WINDOW_HEIGHT, GetFrameTime());
                         AtualizarJogador(&p3, KEY_W, KEY_S, KEY_A, KEY_D, WINDOW_WIDTH, WINDOW_HEIGHT);
                         colisaoMoedas(moedas, &p3, somMoeda);  
-                        VerificarColisaoFantasma(&fantasma, &p3, somColisao);
+                        for (int i = 0; i < fantasmas.quantidade; i++) {
+                            if (VerificarColisaoFantasma(&fantasmas.fantasmas[i], &p3, somColisao)) {
+                                // ações adicionais, se quiser
+                            }
+                        }
+                        
                     } else if (opcaojogadores == 2) {
-                        AtualizarFantasma(&fantasma, p1.posicao, WINDOW_WIDTH, WINDOW_HEIGHT);
+                        AtualizarListaFantasmas(&fantasmas, p3.posicao, WINDOW_WIDTH, WINDOW_HEIGHT, GetFrameTime());
                         AtualizarJogador(&p1, KEY_W, KEY_S, KEY_A, KEY_D, WINDOW_WIDTH, WINDOW_HEIGHT);
                         AtualizarJogador(&p2, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, WINDOW_WIDTH, WINDOW_HEIGHT);
                         colisaoMoedas(moedas, &p1, somMoeda);  
                         colisaoMoedas(moedas, &p2, somMoeda); 
-                        VerificarColisaoFantasma(&fantasma, &p1, somColisao);
-                        VerificarColisaoFantasma(&fantasma, &p2, somColisao);
+                        for (int i = 0; i < fantasmas.quantidade; i++) {
+                            if (VerificarColisaoFantasma(&fantasmas.fantasmas[i], &p1, somColisao)) {
+                                // ações adicionais, se quiser
+                            }
+                        }
+                        for (int i = 0; i < fantasmas.quantidade; i++) {
+                            if (VerificarColisaoFantasma(&fantasmas.fantasmas[i], &p2, somColisao)) {
+                                // ações adicionais, se quiser
+                            }
+                        }
                     }
 
                     if (opcaojogadores == 1) {
@@ -269,7 +285,7 @@ int main(void) {
     DestruirJogador(&p1);
     DestruirJogador(&p2);
     DestruirJogador(&p3);
-    DestruirFantasma(&fantasma);
+    DestruirListaFantasmas(&fantasmas);
     UnloadTexturasMoedas(); 
     UnloadTexture(bgMenu);
     UnloadTexture(bgJogo);
