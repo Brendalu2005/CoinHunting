@@ -22,8 +22,6 @@ void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual, int *opcao) {
                 break;
         }
     }
-    
-
 
 }
 

@@ -5,7 +5,7 @@
 #include <time.h>
 #include <math.h>
 
-#define TEMPO_VIDA_MOEDA 7.0f
+float tempoVidaMoeda = 13.0f;
 
 Texture2D moedaPrataTex;
 Texture2D moedaOuroTex;
@@ -40,7 +40,13 @@ void InicializarMoedas(Moeda moedas[]) {
     }
 }
 
-void AtualizarMoedas(Moeda moedas[], float *tempoRespawn) {
+void AtualizarTempoVidaMoeda(float tempoTotalJogo) {
+    float novaVida = 13.0f - floorf(tempoTotalJogo / 30.0f);
+    tempoVidaMoeda = fmaxf(2.0f, novaVida);
+}
+
+void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo) {
+    AtualizarTempoVidaMoeda(tempoTotalJogo);
     *tempoRespawn += GetFrameTime();
 
     if (*tempoRespawn >= 2.0f) {
@@ -62,7 +68,7 @@ void AtualizarMoedas(Moeda moedas[], float *tempoRespawn) {
     for (int i = 0; i < MAX_MOEDAS; i++) {
         if (moedas[i].ativa) {
             moedas[i].tempoVida += GetFrameTime();
-            if (moedas[i].tempoVida >= TEMPO_VIDA_MOEDA) moedas[i].ativa = false;
+            if (moedas[i].tempoVida >= tempoVidaMoeda) moedas[i].ativa = false;
         }
     }
 }
@@ -72,7 +78,7 @@ void DesenharMoedas(Moeda moedas[]) {
         if (!moedas[i].ativa) continue;
 
         Texture2D tex = (moedas[i].tipo == PRATA) ? moedaPrataTex : moedaOuroTex;
-        float tempoRestante = TEMPO_VIDA_MOEDA - moedas[i].tempoVida;
+        float tempoRestante = tempoVidaMoeda - moedas[i].tempoVida;
         Color cor = WHITE;
 
         if (tempoRestante <= 2.0f) {

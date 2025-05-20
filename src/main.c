@@ -130,11 +130,11 @@ int main(void) {
                 break;
 
             case JOGO:
-                AtualizarMoedas(moedas, &tempoRespawn);
+                float tempoTotalJogo = GetTime();
+                AtualizarMoedas(moedas, &tempoRespawn, tempoTotalJogo);
                 DrawTexture(bgJogo, 0, 0, WHITE);
                 DesenharMoedas(moedas); 
                 DesenharListaFantasmas(&fantasmas);
-
 
                 if (!jogoFinalizado) {
                     if (opcaojogadores == 1) {
@@ -143,7 +143,6 @@ int main(void) {
                         colisaoMoedas(moedas, &p3, somMoeda);  
                         for (int i = 0; i < fantasmas.quantidade; i++) {
                             if (VerificarColisaoFantasma(&fantasmas.fantasmas[i], &p3, somColisao)) {
-                                // ações adicionais, se quiser
                             }
                         }
                         
@@ -155,12 +154,10 @@ int main(void) {
                         colisaoMoedas(moedas, &p2, somMoeda); 
                         for (int i = 0; i < fantasmas.quantidade; i++) {
                             if (VerificarColisaoFantasma(&fantasmas.fantasmas[i], &p1, somColisao)) {
-                                // ações adicionais, se quiser
                             }
                         }
                         for (int i = 0; i < fantasmas.quantidade; i++) {
                             if (VerificarColisaoFantasma(&fantasmas.fantasmas[i], &p2, somColisao)) {
-                                // ações adicionais, se quiser
                             }
                         }
                     }

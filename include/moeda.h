@@ -19,7 +19,7 @@ extern Texture2D moedaOuroTex;
 extern Sound somMoeda;
 
 void InicializarMoedas(Moeda moedas[]);
-void AtualizarMoedas(Moeda moedas[], float *tempoRespawn);
+void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo);
 void DesenharMoedas(Moeda moedas[]);
 void CarregarTexturasMoedas(void);
 void UnloadTexturasMoedas(void);
