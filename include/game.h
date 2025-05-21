@@ -36,10 +36,7 @@ typedef struct {
 
 Jogador CriarJogador(const char *jsonPath, const char *nomeNoJson, Vector2 posicaoInicial);
 
-void    AtualizarJogador(Jogador *j, int upKey, int downKey,
-                         int leftKey, int rightKey,
-                         int larguraTela, int alturaTela);
-
+void AtualizarJogador(Jogador *j, int upKey, int downKey,int leftKey, int rightKey,  Rectangle areaJogo);
 void    AtualizarAnimacao(Jogador *j, bool estaAndando);
 void    DesenharJogador (Jogador *j);
 void    DestruirJogador (Jogador *j);

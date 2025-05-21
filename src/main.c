@@ -9,6 +9,8 @@
 #include <math.h>
 #include "audio.h"
 
+
+
 int main(void) {
 
     InitAudioDevice();
@@ -67,10 +69,10 @@ int main(void) {
 
         BeginDrawing();
         ClearBackground(RAYWHITE);
-
+        
         UpdateMusicStream(musicaMenu);
         UpdateMusicStream(musicaPartida);
-
+        
         if (tela == JOGO) {
             if (!IsMusicStreamPlaying(musicaPartida)) {
                 StopMusicStream(musicaMenu);
@@ -84,24 +86,24 @@ int main(void) {
             }
             UpdateMusicStream(musicaMenu);
         }
-
+        
         switch (tela) {
-
+            
             case MENU:
-                AtualizarMenu(botaoIniciar, &tela, &opcaoMenu);
-                DesenharMenu(botaoIniciar, bgMenu, opcaoMenu);
-                break;
-
+            AtualizarMenu(botaoIniciar, &tela, &opcaoMenu);
+            DesenharMenu(botaoIniciar, bgMenu, opcaoMenu);
+            break;
+            
             case SELECAO:
-                AtualizarSelecaoJogadores(botao1Jogador, botao2Jogadores, &tela, &opcaojogadores);
-                DesenharSelecaoJogadores(botao1Jogador, botao2Jogadores, bgMenu, opcaojogadores);
-                break;
-
+            AtualizarSelecaoJogadores(botao1Jogador, botao2Jogadores, &tela, &opcaojogadores);
+            DesenharSelecaoJogadores(botao1Jogador, botao2Jogadores, bgMenu, opcaojogadores);
+            break;
+            
             case SOBRE:
-                AtualizarSobre(&tela);
-                DesenharSobre(bgMenu);
-                break;
-
+            AtualizarSobre(&tela);
+            DesenharSobre(bgMenu);
+            break;
+            
             case RANKING:
                 DesenharRanking(&ranking);
                 if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_ENTER)) {
@@ -110,18 +112,19 @@ int main(void) {
                     opcaojogadores = -1;
                     jogoFinalizado = false;
                     solicitandoNome = false;
-
+                    
                     InicializarMoedas(moedas);
                     p1.moedasPrata = p1.moedasOuro = 0;
                     p2.moedasPrata = p2.moedasOuro = 0;
                     p3.moedasPrata = p3.moedasOuro = 0;
-
+                    
                     tempoRestante = 180;
                     tempoAcumulado = 0.0f;
                 }
                 break;
-
-            case JOGO:
+                
+                case JOGO:
+                DrawRectangleLinesEx(areaJogo, 3, DARKGRAY);
                 float tempoTotalJogo = GetTime();
                 if (opcaojogadores == 1) {
                     if (GetTime() < p3.tempoTextoMoeda) {
@@ -136,7 +139,7 @@ int main(void) {
                     }
             }
 
-                AtualizarMoedas(moedas, &tempoRespawn, tempoTotalJogo);
+            AtualizarMoedas(moedas, &tempoRespawn, tempoTotalJogo, areaJogo);
                 DrawTexturePro(
                     bgJogo,
                     (Rectangle){ 0, 0, (float)bgJogo.width, (float)bgJogo.height },
@@ -153,9 +156,9 @@ int main(void) {
 
                 if (!jogoFinalizado) {
                     if (opcaojogadores == 1) {
-                        AtualizarListaFantasmas(&fantasmas, p3.posicao, WINDOW_WIDTH, WINDOW_HEIGHT, GetFrameTime());
-                        AtualizarFantasma(&ghost2.ghost, p3.posicao, WINDOW_WIDTH, WINDOW_HEIGHT);
-                        AtualizarJogador(&p3, KEY_W, KEY_S, KEY_A, KEY_D, WINDOW_WIDTH, WINDOW_HEIGHT);
+                        AtualizarListaFantasmas(&fantasmas, p3.posicao, areaJogo, GetFrameTime());
+                        AtualizarFantasma(&ghost2.ghost, p3.posicao,  areaJogo);
+                        AtualizarJogador(&p3, KEY_W, KEY_S, KEY_A, KEY_D,  areaJogo);
                         colisaoMoedas(moedas, &p3, somMoeda);  
                         for (int i = 0; i < fantasmas.quantidade; i++) {
                             if (VerificarColisaoFantasma(&fantasmas.fantasmas[i], &p3, somColisao)) {
@@ -165,10 +168,10 @@ int main(void) {
                         VerificarColisaoGhost2(&ghost2, &p3, somColisao, textos);
                         
                     } else if (opcaojogadores == 2) {
-                        AtualizarListaFantasmas(&fantasmas, p3.posicao, WINDOW_WIDTH, WINDOW_HEIGHT, GetFrameTime());
-                        AtualizarFantasma(&ghost2.ghost, p1.posicao, WINDOW_WIDTH, WINDOW_HEIGHT);
-                        AtualizarJogador(&p1, KEY_W, KEY_S, KEY_A, KEY_D, WINDOW_WIDTH, WINDOW_HEIGHT);
-                        AtualizarJogador(&p2, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, WINDOW_WIDTH, WINDOW_HEIGHT);
+                        AtualizarListaFantasmas(&fantasmas, p3.posicao, areaJogo, GetFrameTime());
+                        AtualizarFantasma(&ghost2.ghost, p1.posicao, areaJogo);
+                        AtualizarJogador(&p1, KEY_W, KEY_S, KEY_A, KEY_D, areaJogo);
+                        AtualizarJogador(&p2, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, areaJogo);
                         colisaoMoedas(moedas, &p1, somMoeda);  
                         colisaoMoedas(moedas, &p2, somMoeda); 
                         for (int i = 0; i < fantasmas.quantidade; i++) {

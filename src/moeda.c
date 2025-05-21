@@ -44,7 +44,7 @@ void AtualizarTempoVidaMoeda(float tempoTotalJogo) {
     tempoVidaMoeda = fmaxf(2.0f, novaVida);
 }
 
-void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo) {
+void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo,  Rectangle areaJogo) {
     AtualizarTempoVidaMoeda(tempoTotalJogo);
     *tempoRespawn += GetFrameTime();
 
@@ -55,7 +55,10 @@ void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo) 
             if (!moedas[i].ativa) {
                 if (rand() % 100 < 70) {
                     moedas[i].ativa     = true;
-                    moedas[i].posicao   = (Vector2){rand() % (WINDOW_WIDTH - 32), rand() % (WINDOW_HEIGHT - 32)};
+                    moedas[i].posicao = (Vector2){
+                        rand() % (int)(areaJogo.width - 32) + (int)areaJogo.x,
+                        rand() % (int)(areaJogo.height - 32) + (int)areaJogo.y
+                    };                    
                     moedas[i].tipo      = (rand() % 100 < 80) ? PRATA : OURO;
                     moedas[i].tempoVida = 0.0f;
                     break;

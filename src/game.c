@@ -14,6 +14,7 @@ static void CarregarTexturas(Texture2D *dest, cJSON *array, int *qtd)
     *qtd = n;
 }
 
+
 Jogador CriarJogador(const char *jsonPath, const char *nome, Vector2 pos0)
 {
     Jogador j = {0};
@@ -67,28 +68,27 @@ void AtualizarAnimacao(Jogador *j, bool andando)
     }
 }
 
-void AtualizarJogador(Jogador *j, int upKey, int downKey,int leftKey, int rightKey, int largura, int altura)
+void AtualizarJogador(Jogador *j, int upKey, int downKey, int leftKey, int rightKey, Rectangle areaJogo)
 {
-
     if (GetTime() - j->tempoUltimaColisaoGhost2 < 5.0f) {
-       
         return;
     }
+
     bool andando = false;
 
-    if (IsKeyDown(upKey) && j->posicao.y > 0) {
+    if (IsKeyDown(upKey) && j->posicao.y > areaJogo.y) {
         j->posicao.y -= j->velocidade;
         j->direcaoAtual = UP;
         andando = true;
-    } else if (IsKeyDown(downKey) && j->posicao.y + j->baixo[0].height < altura) {
+    } else if (IsKeyDown(downKey) && j->posicao.y + j->baixo[0].height < areaJogo.y + areaJogo.height) {
         j->posicao.y += j->velocidade;
         j->direcaoAtual = DOWN;
         andando = true;
-    } else if (IsKeyDown(leftKey) && j->posicao.x > 0) {
+    } else if (IsKeyDown(leftKey) && j->posicao.x > areaJogo.x) {
         j->posicao.x -= j->velocidade;
         j->direcaoAtual = LEFT;
         andando = true;
-    } else if (IsKeyDown(rightKey) && j->posicao.x + j->direita[0].width < largura) {
+    } else if (IsKeyDown(rightKey) && j->posicao.x + j->direita[0].width < areaJogo.x + areaJogo.width) {
         j->posicao.x += j->velocidade;
         j->direcaoAtual = RIGHT;
         andando = true;
@@ -96,6 +96,7 @@ void AtualizarJogador(Jogador *j, int upKey, int downKey,int leftKey, int rightK
 
     AtualizarAnimacao(j, andando);
 }
+
 
 void DesenharJogador(Jogador *j){
     Texture2D txt;

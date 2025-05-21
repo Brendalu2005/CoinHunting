@@ -40,13 +40,13 @@ typedef struct {
 } ListaFantasmas;
 
 void InicializarListaFantasmas(ListaFantasmas *lista, const char *caminhoJSON, const char *chaveFantasma);
-void AtualizarListaFantasmas(ListaFantasmas *lista, Vector2 jogadorPos, int largura, int altura, float delta);
+void AtualizarListaFantasmas(ListaFantasmas *lista, Vector2 jogadorPos, Rectangle areaJogo, float delta);
 void DesenharListaFantasmas(ListaFantasmas *lista);
 void DestruirListaFantasmas(ListaFantasmas *lista);
 void CarregarTexturas(Texture2D *imagens, const cJSON *array, int *quantidade);
 Ghost CriarFantasma(const char *caminhoJSON, const char *chaveFantasma, Vector2 posicaoInicial);
 Ghost2 CriarGhost2(const char *jsonPath, const char *spriteID, Vector2 pos);
-void AtualizarFantasma(Ghost *g, Vector2 jogadorPos, float largura, float altura);
+void AtualizarFantasma(Ghost *g, Vector2 jogadorPos, Rectangle areaJogo);
 void DesenharFantasma(Ghost *g);
 void DestruirFantasma(Ghost *g);
 bool VerificarColisaoFantasma(Ghost *g, Jogador *j, Sound somSusto);

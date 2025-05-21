@@ -14,6 +14,7 @@ void CarregarTexturas(Texture2D *imagens, const cJSON *array, int *quantidade) {
     }
 }
 
+
 Ghost CriarFantasma(const char *caminhoJSON, const char *chaveFantasma, Vector2 posicaoInicial) {
     Ghost g = {0};
     g.position = posicaoInicial;
@@ -58,7 +59,7 @@ Ghost CriarFantasma(const char *caminhoJSON, const char *chaveFantasma, Vector2 
     return g;
 }
 
-void AtualizarFantasma(Ghost *g, Vector2 jogadorPos, float largura, float altura) {
+void AtualizarFantasma(Ghost *g, Vector2 jogadorPos, Rectangle areaJogo) {
     float dt = GetFrameTime();
     g->moveTimer += dt;
     g->timer += dt;
@@ -71,10 +72,25 @@ void AtualizarFantasma(Ghost *g, Vector2 jogadorPos, float largura, float altura
     float w = g->right[0].width;
     float h = g->down[0].height;
 
-    if (g->currentDirection == UP    && g->position.y > 0)               g->position.y -= g->speed;
-    if (g->currentDirection == DOWN  && g->position.y + h < altura)      g->position.y += g->speed;
-    if (g->currentDirection == LEFT  && g->position.x > 0)               g->position.x -= g->speed;
-    if (g->currentDirection == RIGHT && g->position.x + w < largura)     g->position.x += g->speed;
+    if (g->currentDirection == UP &&
+        g->position.y > areaJogo.y) {
+        g->position.y -= g->speed;
+    }
+
+    if (g->currentDirection == DOWN &&
+        g->position.y + h < areaJogo.y + areaJogo.height) {
+        g->position.y += g->speed;
+    }
+
+    if (g->currentDirection == LEFT &&
+        g->position.x > areaJogo.x) {
+        g->position.x -= g->speed;
+    }
+
+    if (g->currentDirection == RIGHT &&
+        g->position.x + w < areaJogo.x + areaJogo.width) {
+        g->position.x += g->speed;
+    }
 
     int total = g->frameCount[g->currentDirection];
     if (total > 1 && g->timer >= g->frameTime) {
@@ -82,6 +98,7 @@ void AtualizarFantasma(Ghost *g, Vector2 jogadorPos, float largura, float altura
         g->timer = 0.0f;
     }
 }
+
 
 void DesenharFantasma(Ghost *g) {
     Texture2D *anim[] = { g->up, g->down, g->left, g->right };
@@ -113,20 +130,22 @@ void InicializarListaFantasmas(ListaFantasmas *lista, const char *caminhoJSON, c
     lista->fantasmas[0] = CriarFantasma(caminhoJSON, chaveFantasma, (Vector2){ 300, 300 });
 }
 
-void AtualizarListaFantasmas(ListaFantasmas *lista, Vector2 jogadorPos, int largura, int altura, float delta) {
+void AtualizarListaFantasmas(ListaFantasmas *lista, Vector2 jogadorPos, Rectangle areaJogo, float delta) {
     lista->tempoDesdeUltimo += delta;
 
     if (lista->tempoDesdeUltimo >= 30.0f && lista->quantidade < MAX_FANTASMAS) {
         lista->fantasmas[lista->quantidade] = CriarFantasma("sprites/json/movimentaçãoPlayer.json", "ghost_walk",
-            (Vector2){ rand() % (largura - 64), rand() % (altura - 64) });
+            (Vector2){ rand() % (int)(areaJogo.width - 64) + (int)areaJogo.x, 
+                       rand() % (int)(areaJogo.height - 64) + (int)areaJogo.y });
         lista->quantidade++;
         lista->tempoDesdeUltimo = 0.0f;
     }
 
     for (int i = 0; i < lista->quantidade; i++) {
-        AtualizarFantasma(&lista->fantasmas[i], jogadorPos, largura, altura);
+        AtualizarFantasma(&lista->fantasmas[i], jogadorPos, areaJogo);
     }
 }
+
 
 void DesenharListaFantasmas(ListaFantasmas *lista) {
     for (int i = 0; i < lista->quantidade; i++) {
