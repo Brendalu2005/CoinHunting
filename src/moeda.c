@@ -7,6 +7,9 @@
 
 float tempoVidaMoeda = 13.0f;
 
+#define MOEDA_LARGURA 27
+#define MOEDA_ALTURA 26
+
 Texture2D moedaPrataTex;
 Texture2D moedaOuroTex;
 
@@ -96,16 +99,41 @@ void DesenharMoedas(Moeda moedas[]) {
 }
 
 void colisaoMoedas(Moeda moedas[], Jogador *jogador, Sound somMoeda) {
+
+    Texture2D txt = {0};
+
+    switch (jogador->direcaoAtual) {
+        case UP:    txt = jogador->cima   [jogador->indiceFrame]; break;
+        case DOWN:  txt = jogador->baixo  [jogador->indiceFrame]; break;
+        case LEFT:  txt = jogador->esquerda[jogador->indiceFrame]; break;
+        case RIGHT: txt = jogador->direita [jogador->indiceFrame]; break;
+    }
+
+    Rectangle rectJogador = {
+        jogador->posicao.x,
+        jogador->posicao.y,
+        (float)txt.width,
+        (float)txt.height
+    };
+
     for (int i = 0; i < MAX_MOEDAS; i++) {
-        if (moedas[i].ativa && CheckCollisionCircles(jogador->posicao, 16, moedas[i].posicao, 14)) {
-            if (moedas[i].tipo == OURO) {
-                jogador->moedasOuro++;
-                PlaySound(somMoeda);
-            } else {
-                jogador->moedasPrata++;
-                PlaySound(somMoeda);
-            }
+        if (!moedas[i].ativa) continue;
+
+        Rectangle rectMoeda = {
+            moedas[i].posicao.x,
+            moedas[i].posicao.y,
+            MOEDA_LARGURA,
+            MOEDA_ALTURA
+        };
+
+        if (CheckCollisionRecs(rectJogador, rectMoeda)) {
+            if (moedas[i].tipo == OURO) jogador->moedasOuro++;
+            else jogador->moedasPrata++;
+
+            PlaySound(somMoeda);
             moedas[i].ativa = false;
         }
     }
 }
+
+

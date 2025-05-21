@@ -114,8 +114,8 @@ void DesenharRanking(Ranking **head) {
         i++;
     }
 
-    int y = 100; //posição vertical 
-    int pos = scrollOffset + 1; //posição real do jogador no ranking
+    int y = 100; 
+    int pos = scrollOffset + 1; 
     int exibidos = 0;
 
     while (temp && exibidos < totalExibidos) {

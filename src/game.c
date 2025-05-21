@@ -14,7 +14,6 @@ static void CarregarTexturas(Texture2D *dest, cJSON *array, int *qtd)
     *qtd = n;
 }
 
-
 Jogador CriarJogador(const char *jsonPath, const char *nome, Vector2 pos0)
 {
     Jogador j = {0};
