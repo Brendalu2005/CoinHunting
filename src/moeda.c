@@ -73,7 +73,9 @@ void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo, 
     for (int i = 0; i < MAX_MOEDAS; i++) {
         if (moedas[i].ativa) {
             moedas[i].tempoVida += GetFrameTime();
-            if (moedas[i].tempoVida >= tempoVidaMoeda) moedas[i].ativa = false;
+            if (moedas[i].tempoVida >= tempoVidaMoeda){
+                moedas[i].ativa = false;
+            } 
         }
     }
 }
@@ -91,10 +93,11 @@ void DesenharMoedas(Moeda moedas[]) {
             if (piscar < 0.2f) cor.a = 100;
         }
 
-        if (moedas[i].tipo == OURO)
+        if (moedas[i].tipo == OURO){
             DrawTextureEx(tex, moedas[i].posicao, 0.0f, 1.2f, cor);
-        else
+        }else{
             DrawTextureV(tex, moedas[i].posicao, cor);
+        }
     }
 }
 
@@ -117,7 +120,9 @@ void colisaoMoedas(Moeda moedas[], Jogador *jogador, Sound somMoeda) {
     };
 
     for (int i = 0; i < MAX_MOEDAS; i++) {
-        if (!moedas[i].ativa) continue;
+        if (!moedas[i].ativa){
+            continue;
+        } 
 
         Rectangle rectMoeda = {
             moedas[i].posicao.x,
@@ -127,8 +132,11 @@ void colisaoMoedas(Moeda moedas[], Jogador *jogador, Sound somMoeda) {
         };
 
         if (CheckCollisionRecs(rectJogador, rectMoeda)) {
-            if (moedas[i].tipo == OURO) jogador->moedasOuro++;
-            else jogador->moedasPrata++;
+            if (moedas[i].tipo == OURO){
+                jogador->moedasOuro++;
+            }else{
+                jogador->moedasPrata++;
+            } 
 
             PlaySound(somMoeda);
             moedas[i].ativa = false;

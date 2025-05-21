@@ -21,7 +21,7 @@ Jogador CriarJogador(const char *jsonPath, const char *nome, Vector2 pos0)
     j.velocidade   = 4;
     j.direcaoAtual = DOWN;
     j.tempoFrame   = 0.15f;
-    j.tempoUltimaColisaoGhost2 = 0.0f;
+    j.tempoUltimaColisaoGhost2 = -10.0f;
 
 
     FILE *f = fopen(jsonPath, "rb");
