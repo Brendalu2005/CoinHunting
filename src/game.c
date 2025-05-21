@@ -21,6 +21,8 @@ Jogador CriarJogador(const char *jsonPath, const char *nome, Vector2 pos0)
     j.velocidade   = 4;
     j.direcaoAtual = DOWN;
     j.tempoFrame   = 0.15f;
+    j.tempoUltimaColisaoGhost2 = 0.0f;
+
 
     FILE *f = fopen(jsonPath, "rb");
     if (!f) return j;
@@ -67,6 +69,11 @@ void AtualizarAnimacao(Jogador *j, bool andando)
 
 void AtualizarJogador(Jogador *j, int upKey, int downKey,int leftKey, int rightKey, int largura, int altura)
 {
+
+    if (GetTime() - j->tempoUltimaColisaoGhost2 < 5.0f) {
+       
+        return;
+    }
     bool andando = false;
 
     if (IsKeyDown(upKey) && j->posicao.y > 0) {
@@ -90,8 +97,7 @@ void AtualizarJogador(Jogador *j, int upKey, int downKey,int leftKey, int rightK
     AtualizarAnimacao(j, andando);
 }
 
-void DesenharJogador(Jogador *j)
-{
+void DesenharJogador(Jogador *j){
     Texture2D txt;
     switch (j->direcaoAtual) {
         case UP:    txt = j->cima   [j->indiceFrame]; break;
@@ -99,9 +105,17 @@ void DesenharJogador(Jogador *j)
         case LEFT:  txt = j->esquerda[j->indiceFrame]; break;
         case RIGHT: txt = j->direita [j->indiceFrame]; break;
     }
-    DrawTexture(txt, j->posicao.x, j->posicao.y, WHITE);
 
+    Color cor = WHITE;
+
+    
+    if (GetTime() - j->tempoUltimaColisaoGhost2 < 0.5f) {
+        cor = RED;
+    }
+
+    DrawTexture(txt, j->posicao.x, j->posicao.y, cor);
 }
+
 void DestruirJogador(Jogador *j)
 {
     for (int i = 0; i < MAX_FRAMES_CIMA_BAIXO; i++) {

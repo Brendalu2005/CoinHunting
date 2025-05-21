@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 #include "fixo.h"
 
 void CarregarTexturas(Texture2D *imagens, const cJSON *array, int *quantidade) {
@@ -138,3 +139,91 @@ void DestruirListaFantasmas(ListaFantasmas *lista) {
         DestruirFantasma(&lista->fantasmas[i]);
     }
 }
+
+Ghost2 CriarGhost2(const char *caminhoJSON, const char *id, Vector2 posicao) {
+    Ghost2 g2;
+    g2.ghost = CriarFantasma(caminhoJSON, id, posicao);
+    g2.speed = g2.ghost.speed; 
+    g2.tempoTextoMoeda = 0.0f;
+    return g2;
+}
+
+
+
+void VerificarColisaoGhost2(Ghost2 *ghost, Jogador *j, Sound somColisao, TextoPerda textos[MAX_TEXTS]) {
+    float tempoAtual = GetTime();
+
+    Rectangle rectJogador = {
+        j->posicao.x,
+        j->posicao.y,
+        j->direita[0].width,
+        j->direita[0].height
+    };
+
+    Texture2D *directions[] = {
+        ghost->ghost.up,
+        ghost->ghost.down,
+        ghost->ghost.left,
+        ghost->ghost.right
+    };
+
+    Texture2D texturaAtual = directions[ghost->ghost.currentDirection][ghost->ghost.frameIndex];
+
+    Rectangle rectGhost = {
+        ghost->ghost.position.x,
+        ghost->ghost.position.y,
+        texturaAtual.width,
+        texturaAtual.height
+    };
+
+    if (CheckCollisionRecs(rectJogador, rectGhost)) {
+        if (tempoAtual - j->tempoUltimaColisaoGhost2 > 5.0f) {
+            PlaySound(somColisao);
+            j->tempoUltimaColisaoGhost2 = tempoAtual;
+
+            if (j->moedasOuro > 0) {
+                j->moedasOuro--;
+            } else if (j->moedasPrata > 0) {
+                j->moedasPrata--;
+            }
+
+            
+            for (int i = 0; i < MAX_TEXTS; i++) {
+                if (!textos[i].active) {
+                    textos[i].active = true;
+                    textos[i].position = (Vector2){ 
+                        j->posicao.x + j->direita[0].width / 2 - MeasureText("-1 moeda", 20) / 2, 
+                        j->posicao.y - 10 
+                    };
+                    textos[i].Congelado = tempoAtual + 5.0f;
+                    strcpy(textos[i].texto, "-1 moeda");
+                    break;
+                }
+            }
+
+            j->tempoTextoMoeda = tempoAtual + 5.0f;
+        }
+    }
+}
+
+
+
+void DesenharTextosPerda(TextoPerda textos[MAX_TEXTS]) {
+    for (int i = 0; i < MAX_TEXTS; i++) {
+        if (textos[i].active) {
+            DrawText(textos[i].texto,
+                     textos[i].position.x,
+                     textos[i].position.y - 20,
+                     20,
+                     RED);
+
+            if (GetTime() > textos[i].Congelado) {
+                textos[i].active = false;
+            }
+        }
+    }
+}
+
+
+
+

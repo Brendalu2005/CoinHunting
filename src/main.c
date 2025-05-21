@@ -30,12 +30,15 @@ int main(void) {
     Jogador p2 = CriarJogador(JSON, "brenda_walk", (Vector2){680, 360});
     Jogador p3 = CriarJogador(JSON, "guto_walk",   (Vector2){640, 360});
     ListaFantasmas fantasmas;
-    InicializarListaFantasmas(&fantasmas, "sprites/json/movimentaçãoPlayer.json", "ghost_walk");
+    Ghost2 ghost2 = CriarGhost2(JSON, "ghost2_walk", (Vector2){ 500, 200 });
+    InicializarListaFantasmas(&fantasmas, JSON, "ghost_walk");
+    
 
     Moeda moedas[MAX_MOEDAS];
     float tempoRespawn = 0.0f;
     InicializarMoedas(moedas);
     CarregarTexturasMoedas();
+    TextoPerda textos[MAX_TEXTS];
 
     struct Ranking *ranking = CarregarRanking();
 
@@ -120,6 +123,19 @@ int main(void) {
 
             case JOGO:
                 float tempoTotalJogo = GetTime();
+                if (opcaojogadores == 1) {
+                    if (GetTime() < p3.tempoTextoMoeda) {
+                        DrawRectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, (Color){255, 0, 0, 100});
+                    }
+                } else if (opcaojogadores == 2) {
+                    if (GetTime() < p1.tempoTextoMoeda) {
+                        DrawRectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, (Color){255, 0, 0, 100});
+                    }
+                    if (GetTime() < p2.tempoTextoMoeda) {
+                        DrawRectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, (Color){255, 0, 0, 100});
+                    }
+            }
+
                 AtualizarMoedas(moedas, &tempoRespawn, tempoTotalJogo);
                 DrawTexturePro(
                     bgJogo,
@@ -131,19 +147,26 @@ int main(void) {
                 );
                 DesenharMoedas(moedas); 
                 DesenharListaFantasmas(&fantasmas);
+                DesenharFantasma(&ghost2.ghost);
+                DesenharTextosPerda(textos);
+
 
                 if (!jogoFinalizado) {
                     if (opcaojogadores == 1) {
                         AtualizarListaFantasmas(&fantasmas, p3.posicao, WINDOW_WIDTH, WINDOW_HEIGHT, GetFrameTime());
+                        AtualizarFantasma(&ghost2.ghost, p3.posicao, WINDOW_WIDTH, WINDOW_HEIGHT);
                         AtualizarJogador(&p3, KEY_W, KEY_S, KEY_A, KEY_D, WINDOW_WIDTH, WINDOW_HEIGHT);
                         colisaoMoedas(moedas, &p3, somMoeda);  
                         for (int i = 0; i < fantasmas.quantidade; i++) {
                             if (VerificarColisaoFantasma(&fantasmas.fantasmas[i], &p3, somColisao)) {
                             }
                         }
+
+                        VerificarColisaoGhost2(&ghost2, &p3, somColisao, textos);
                         
                     } else if (opcaojogadores == 2) {
                         AtualizarListaFantasmas(&fantasmas, p3.posicao, WINDOW_WIDTH, WINDOW_HEIGHT, GetFrameTime());
+                        AtualizarFantasma(&ghost2.ghost, p1.posicao, WINDOW_WIDTH, WINDOW_HEIGHT);
                         AtualizarJogador(&p1, KEY_W, KEY_S, KEY_A, KEY_D, WINDOW_WIDTH, WINDOW_HEIGHT);
                         AtualizarJogador(&p2, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, WINDOW_WIDTH, WINDOW_HEIGHT);
                         colisaoMoedas(moedas, &p1, somMoeda);  
@@ -152,10 +175,15 @@ int main(void) {
                             if (VerificarColisaoFantasma(&fantasmas.fantasmas[i], &p1, somColisao)) {
                             }
                         }
+                        
+                        VerificarColisaoGhost2(&ghost2, &p1, somColisao, textos);
+                        
                         for (int i = 0; i < fantasmas.quantidade; i++) {
                             if (VerificarColisaoFantasma(&fantasmas.fantasmas[i], &p2, somColisao)) {
                             }
                         }
+
+                        VerificarColisaoGhost2(&ghost2, &p2, somColisao, textos);
                     }
 
                     if (opcaojogadores == 1) {
@@ -277,6 +305,7 @@ int main(void) {
     DestruirJogador(&p1);
     DestruirJogador(&p2);
     DestruirJogador(&p3);
+    DestruirFantasma(&ghost2.ghost);
     DestruirListaFantasmas(&fantasmas);
     UnloadTexturasMoedas(); 
     UnloadTexture(bgMenu);

@@ -120,5 +120,32 @@
       "sprites/png/ghosttras.png",
       "sprites/png/ghosttras.png"
     ]
+  },
+  "ghost2_walk": {
+    "right": [
+      "sprites/png/ghost2direita1.png",
+      "sprites/png/ghost2direita2.png",
+      "sprites/png/ghost2direita3.png",
+      "sprites/png/ghost2direita4.png",
+      "sprites/png/ghost2direita5.png",
+      "sprites/png/ghost2direita6.png"
+    ],
+    "left": [
+      "sprites/png/ghost2esquerda1.png",
+      "sprites/png/ghost2esquerda2.png",
+      "sprites/png/ghost2esquerda3.png",
+      "sprites/png/ghost2esquerda4.png",
+      "sprites/png/ghost2esquerda5.png",
+      "sprites/png/ghost2esquerda6.png"
+    ],
+    "up": [
+      "sprites/png/ghost2tras.png",
+      "sprites/png/ghost2tras.png"
+    ],
+    "down": [
+      "sprites/png/ghost2frente1.png",
+      "sprites/png/ghost2frente1.png"
+      
+    ]
   }
 }
