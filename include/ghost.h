@@ -17,7 +17,6 @@ typedef struct {
     int frameIndex;  
     float moveCooldown;  
     float moveTimer;  
-    
     Texture2D up[MAX_GHOST_FRAMES]; 
     Texture2D down[MAX_GHOST_FRAMES];  
     Texture2D left[MAX_GHOST_FRAMES];  

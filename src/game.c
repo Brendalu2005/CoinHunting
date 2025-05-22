@@ -74,7 +74,7 @@ void AtualizarJogador(Jogador *j, int upKey, int downKey, int leftKey, int right
     }
 
     bool andando = false;
-
+    
     if (IsKeyDown(upKey) && j->posicao.y > areaJogo.y) {
         j->posicao.y -= j->velocidade;
         j->direcaoAtual = UP;

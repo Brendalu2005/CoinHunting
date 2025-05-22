@@ -46,7 +46,7 @@ void SalvarRanking(Ranking **head) {
 void AdicionarAoRanking(Ranking **head, const char *nome, int pontuacao) {
     struct Ranking *novo_no =(struct Ranking*)malloc(sizeof(struct Ranking));
     strncpy(novo_no->nome, nome, TAM_NOME - 1);
-    novo_no->nome[TAM_NOME - 1] = '\0';
+    novo_no->nome[TAM_NOME-1] = '\0';
     novo_no->pontuacao = pontuacao;
     novo_no->next = NULL;
 
@@ -74,7 +74,7 @@ void LiberarRanking(Ranking **head) {
 
 void DesenharRanking(Ranking **head) {
     static int scrollOffset = 0;
-    int totalExibidos = 5;
+    int totalExibidos = 20;
 
     ClearBackground(DARKGRAY);
     
