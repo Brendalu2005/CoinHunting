@@ -51,7 +51,7 @@ int main(void) {
     int opcaoMenu = 0;
     int opcaojogadores = -1;
 
-    int tempoRestante = 180; 
+    int tempoRestante = 60; 
     float tempoAcumulado = 0.0f;
 
     bool jogoFinalizado = false;
@@ -114,6 +114,8 @@ int main(void) {
                     solicitandoNome = false;
                     
                     InicializarMoedas(moedas);
+                    DestruirListaFantasmas(&fantasmas);
+                    InicializarListaFantasmas(&fantasmas, JSON, "ghost_walk");
                     p1.moedasPrata = p1.moedasOuro = 0;
                     p2.moedasPrata = p2.moedasOuro = 0;
                     p3.moedasPrata = p3.moedasOuro = 0;

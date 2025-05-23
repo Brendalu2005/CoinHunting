@@ -12,3 +12,8 @@ edu 17
 bren 160
 wasd 5
 fffff 2
+ll 1
+iufyd 1
+igjg 0
+sakdm 0
+cvbnm 0
