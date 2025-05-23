@@ -10,7 +10,7 @@ typedef enum { UP, DOWN, LEFT, RIGHT } Direction;
 
 typedef struct TextoPerda {
     bool active;
-    Vector2 position;
+    Vector2 posicao;
     float Congelado;
     char texto[32];
 } TextoPerda;
@@ -37,8 +37,8 @@ typedef struct {
 Jogador CriarJogador(const char *jsonPath, const char *nomeNoJson, Vector2 posicaoInicial);
 
 void AtualizarJogador(Jogador *j, int upKey, int downKey,int leftKey, int rightKey,  Rectangle areaJogo);
-void    AtualizarAnimacao(Jogador *j, bool estaAndando);
-void    DesenharJogador (Jogador *j);
-void    DestruirJogador (Jogador *j);
+void AtualizarAnimacao(Jogador *j, int andando);
+void DesenharJogador (Jogador *j);
+void DestruirJogador (Jogador *j);
 
 #endif

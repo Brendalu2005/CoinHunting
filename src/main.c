@@ -118,6 +118,7 @@ int main(void) {
                     p2.moedasPrata = p2.moedasOuro = 0;
                     p3.moedasPrata = p3.moedasOuro = 0;
                     
+                    
                     tempoRestante = 180;
                     tempoAcumulado = 0.0f;
                 }

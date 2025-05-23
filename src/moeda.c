@@ -106,10 +106,18 @@ void colisaoMoedas(Moeda moedas[], Jogador *jogador, Sound somMoeda) {
     Texture2D txt = {0};
 
     switch (jogador->direcaoAtual) {
-        case UP:    txt = jogador->cima   [jogador->indiceFrame]; break;
-        case DOWN:  txt = jogador->baixo  [jogador->indiceFrame]; break;
-        case LEFT:  txt = jogador->esquerda[jogador->indiceFrame]; break;
-        case RIGHT: txt = jogador->direita [jogador->indiceFrame]; break;
+        case UP:    
+            txt = jogador->cima   [jogador->indiceFrame]; 
+            break;
+        case DOWN:
+            txt = jogador->baixo  [jogador->indiceFrame]; 
+            break;
+        case LEFT:  
+            txt = jogador->esquerda[jogador->indiceFrame]; 
+            break;
+        case RIGHT: 
+            txt = jogador->direita [jogador->indiceFrame]; 
+            break;
     }
 
     Rectangle rectJogador = {

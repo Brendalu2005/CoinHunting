@@ -20,9 +20,10 @@ void AtualizarSelecaoJogadores(Rectangle botao1, Rectangle botao2, TelaAtual *te
         }  
         else if (*opcao == 1){
             *opcao = 2;
+        }else {
+            *tela = MENU;  
         }   
     }
-
 
 }
 
@@ -75,19 +76,23 @@ void DesenharSobre(Texture2D background) {
 
     const char *titulo = "Sobre o Jogo";
     const char *descricao = "Ajude os exploradores a coletarem o máximo de moedas possivel\n sem ser atingido pelo fantasma protetor da caverna.\n";
-    const char *descricao2 =
+     const char *descricao2 = "Fantasma vermelho: tira moedas\n"
+                              "Fantasma azul: te centraliza no mapa novamente\n";
+    const char *descricao3 =
         "Controles:\n"
         "Jogador 1: W A S D \n"
-        "Jogador 2: Setas direcionais";
+        "Jogador 2: Setas";
 
     int fonteTitulo = 30;
     int fonteDescricao = 20;
     int larguraTitulo = MeasureText(titulo, fonteTitulo);
     int larguraDescricao = MeasureText(descricao, fonteDescricao);
-
     int larguraDescricao2 = MeasureText(descricao2, fonteDescricao);
+    int larguraDescricao3 = MeasureText(descricao3, fonteDescricao);
+
     DrawText(titulo, (GetScreenWidth() - larguraTitulo) / 2, 100, fonteTitulo, WHITE);
     DrawText(descricao, (GetScreenWidth() - larguraDescricao) / 2, 200, fonteDescricao, WHITE);
     DrawText(descricao2, (GetScreenWidth() - larguraDescricao2) / 2, 260, fonteDescricao, WHITE);
+    DrawText(descricao3, (GetScreenWidth() - larguraDescricao3) / 2, 320, fonteDescricao, WHITE);
 }
 

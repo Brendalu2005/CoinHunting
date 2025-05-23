@@ -6,7 +6,9 @@
 
 Ranking *CarregarRanking() {
     FILE *arquivo = fopen("arquivo/ranking.txt", "r");
-    if (!arquivo) return NULL;
+    if (!arquivo){
+        return NULL;
+    } 
 
     Ranking *inicio = NULL;
     Ranking *ultimo = NULL;
@@ -20,8 +22,13 @@ Ranking *CarregarRanking() {
         novo_no->pontuacao = pontos;
         novo_no->next = NULL;
 
-        if (!inicio) inicio = novo_no;
-        else ultimo->next = novo_no;
+        if (!inicio){
+            inicio = novo_no;
+            
+        }else{
+            ultimo->next = novo_no;
+
+        } 
 
         ultimo = novo_no;
     }
@@ -32,8 +39,9 @@ Ranking *CarregarRanking() {
 
 void SalvarRanking(Ranking **head) {
     FILE *arquivo = fopen("arquivo/ranking.txt", "w");
-    if (!arquivo) return;
-
+    if (arquivo == NULL){
+        return;
+    } 
     Ranking *temp = *head;
     while (temp != NULL) {
         fprintf(arquivo, "%s %d\n", temp->nome, temp->pontuacao);

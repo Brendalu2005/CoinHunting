@@ -1,3 +1,4 @@
+#include "fixo.h"
 #include "ghost.h"
 #include "cJSON.h"
 #include "raylib.h"
@@ -5,117 +6,138 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
-#include "fixo.h"
 
-void CarregarTexturas(Texture2D *imagens, const cJSON *array, int *quantidade) {
-    *quantidade = cJSON_GetArraySize(array);
-    for (int i = 0; i < *quantidade; i++) {
-        imagens[i] = LoadTexture(cJSON_GetArrayItem(array, i)->valuestring);
-    }
-}
 
 
 Ghost CriarFantasma(const char *caminhoJSON, const char *chaveFantasma, Vector2 posicaoInicial) {
-    Ghost g = {0};
-    g.position = posicaoInicial;
-    g.speed = 4;
+    Ghost g = {0};   
+    g.posicao = posicaoInicial;
+    g.velocidade = 4;
     g.currentDirection = DOWN;
     g.frameTime = 0.2f;
-    g.moveCooldown = 1.5f;
+    g.moveLimite = 1.5f;
 
+   
     FILE *f = fopen(caminhoJSON, "rb");
-    if (!f) return g;
+    if (f == NULL){
+        return g;
+    } 
 
+    
     fseek(f, 0, SEEK_END);
-    long size = ftell(f);
+    long tamanho = ftell(f);
     rewind(f);
-    char *data = malloc(size + 1);
-    if (fread(data, 1, size, f) != size) {
-        free(data);
+
+    char *buffer = malloc(tamanho + 1);
+    if (buffer == NULL) {
         fclose(f);
         return g;
     }
+
     
-    data[size] = '\0';
+    size_t lidos = fread(buffer, 1, tamanho, f);
     fclose(f);
 
-    cJSON *root = cJSON_Parse(data);
-    free(data);
-    if (!root) return g;
+    if (lidos != tamanho) {
+        free(buffer);
+        return g;
+    }
+
+    buffer[tamanho] = '\0';  
+
+   
+    cJSON *root = cJSON_Parse(buffer);
+    free(buffer);
+    if (root == NULL){
+        return g;
+    } 
 
     cJSON *obj = cJSON_GetObjectItem(root, chaveFantasma);
-    if (!obj) {
+    if (obj == NULL) {
         cJSON_Delete(root);
         return g;
     }
 
+    
     CarregarTexturas(g.up,    cJSON_GetObjectItem(obj, "up"),    &g.frameCount[UP]);
     CarregarTexturas(g.down,  cJSON_GetObjectItem(obj, "down"),  &g.frameCount[DOWN]);
     CarregarTexturas(g.left,  cJSON_GetObjectItem(obj, "left"),  &g.frameCount[LEFT]);
     CarregarTexturas(g.right, cJSON_GetObjectItem(obj, "right"), &g.frameCount[RIGHT]);
 
     cJSON_Delete(root);
-    srand(time(NULL));
+
     return g;
 }
+
 
 void AtualizarFantasma(Ghost *g, Vector2 jogadorPos, Rectangle areaJogo) {
     float dt = GetFrameTime();
     g->moveTimer += dt;
     g->timer += dt;
 
-    if (g->moveTimer >= g->moveCooldown) {
+   
+    if (g->moveTimer >= g->moveLimite) {
         g->currentDirection = GetRandomValue(0, 3);
-        g->moveTimer = 0.0f;
+        g->moveTimer = 0;
     }
 
-    float w = g->right[0].width;
-    float h = g->down[0].height;
+    
+    float largura = g->right[0].width;
+    float altura = g->down[0].height;
 
-    if (g->currentDirection == UP &&
-        g->position.y > areaJogo.y) {
-        g->position.y -= g->speed;
+    
+    switch (g->currentDirection) {
+        case UP:
+            if (g->posicao.y > areaJogo.y)
+                g->posicao.y -= g->velocidade;
+            break;
+        case DOWN:
+            if (g->posicao.y + altura < areaJogo.y + areaJogo.height)
+                g->posicao.y += g->velocidade;
+            break;
+        case LEFT:
+            if (g->posicao.x > areaJogo.x)
+                g->posicao.x -= g->velocidade;
+            break;
+        case RIGHT:
+            if (g->posicao.x + largura < areaJogo.x + areaJogo.width)
+                g->posicao.x += g->velocidade;
+            break;
     }
 
-    if (g->currentDirection == DOWN &&
-        g->position.y + h < areaJogo.y + areaJogo.height) {
-        g->position.y += g->speed;
-    }
-
-    if (g->currentDirection == LEFT &&
-        g->position.x > areaJogo.x) {
-        g->position.x -= g->speed;
-    }
-
-    if (g->currentDirection == RIGHT &&
-        g->position.x + w < areaJogo.x + areaJogo.width) {
-        g->position.x += g->speed;
-    }
-
-    int total = g->frameCount[g->currentDirection];
-    if (total > 1 && g->timer >= g->frameTime) {
-        g->frameIndex = (g->frameIndex + 1) % total;
-        g->timer = 0.0f;
+    
+    int totalFrames = g->frameCount[g->currentDirection];
+    if (totalFrames > 1 && g->timer >= g->frameTime) {
+        g->frameIndex = (g->frameIndex + 1) % totalFrames;
+        g->timer = 0;
     }
 }
 
 
 void DesenharFantasma(Ghost *g) {
-    Texture2D *anim[] = { g->up, g->down, g->left, g->right };
-    int idx = (g->frameCount[g->currentDirection] > 1) ? g->frameIndex : 0;
-    DrawTexture(anim[g->currentDirection][idx], g->position.x, g->position.y, WHITE);
+    Texture2D *animation[] = { g->up, g->down, g->left, g->right };
+
+    int indice = 0;
+    if (g->frameCount[g->currentDirection] > 1) {
+        indice = g->frameIndex;
+    }
+
+    DrawTexture(animation[g->currentDirection][indice], g->posicao.x, g->posicao.y, WHITE);
 }
+
 
 void DestruirFantasma(Ghost *g) {
     for (int d = 0; d < 4; d++) {
         Texture2D *sprites[] = { g->up, g->down, g->left, g->right };
-        for (int i = 0; i < g->frameCount[d]; i++) UnloadTexture(sprites[d][i]);
+        for (int i = 0; i < g->frameCount[d]; i++){
+            UnloadTexture(sprites[d][i]);
+        } 
     }
 }
 
 bool VerificarColisaoFantasma(Ghost *g, Jogador *j, Sound somSusto) {
     Rectangle retJogador = { j->posicao.x, j->posicao.y, 32, 32 };
-    Rectangle retFantasma = { g->position.x, g->position.y, g->right[0].width, g->down[0].height };
+    Rectangle retFantasma = { g->posicao.x, g->posicao.y, g->right[0].width, g->down[0].height };
 
     if (CheckCollisionRecs(retJogador, retFantasma)) {
         PlaySound(somSusto);
@@ -137,6 +159,7 @@ void AtualizarListaFantasmas(ListaFantasmas *lista, Vector2 jogadorPos, Rectangl
         lista->fantasmas[lista->quantidade] = CriarFantasma("sprites/json/movimentaçãoPlayer.json", "ghost_walk",
             (Vector2){ rand() % (int)(areaJogo.width - 64) + (int)areaJogo.x, 
                        rand() % (int)(areaJogo.height - 64) + (int)areaJogo.y });
+
         lista->quantidade++;
         lista->tempoDesdeUltimo = 0.0f;
     }
@@ -159,13 +182,15 @@ void DestruirListaFantasmas(ListaFantasmas *lista) {
     }
 }
 
-Ghost2 CriarGhost2(const char *caminhoJSON, const char *id, Vector2 posicao) {
+Ghost2 CriarGhost2(const char *caminhoJSON, const char *chaveFantasma, Vector2 posicao) {
     Ghost2 g2;
-    g2.ghost = CriarFantasma(caminhoJSON, id, posicao);
-    g2.speed = g2.ghost.speed; 
+    g2.ghost = CriarFantasma(caminhoJSON, chaveFantasma, posicao);
+    g2.velocidade = g2.ghost.velocidade;
     g2.tempoTextoMoeda = 0.0f;
     return g2;
 }
+
+
 
 
 
@@ -189,14 +214,14 @@ void VerificarColisaoGhost2(Ghost2 *ghost, Jogador *j, Sound somColisao, TextoPe
     Texture2D texturaAtual = directions[ghost->ghost.currentDirection][ghost->ghost.frameIndex];
 
     Rectangle rectGhost = {
-        ghost->ghost.position.x,
-        ghost->ghost.position.y,
+        ghost->ghost.posicao.x,
+        ghost->ghost.posicao.y,
         texturaAtual.width,
         texturaAtual.height
     };
 
     if (CheckCollisionRecs(rectJogador, rectGhost)) {
-        if (tempoAtual - j->tempoUltimaColisaoGhost2 > 5.0f) {
+        if (tempoAtual - j->tempoUltimaColisaoGhost2 >= 5.0f) {
             PlaySound(somColisao);
             j->tempoUltimaColisaoGhost2 = tempoAtual;
 
@@ -210,7 +235,7 @@ void VerificarColisaoGhost2(Ghost2 *ghost, Jogador *j, Sound somColisao, TextoPe
             for (int i = 0; i < MAX_TEXTS; i++) {
                 if (!textos[i].active) {
                     textos[i].active = true;
-                    textos[i].position = (Vector2){ 
+                    textos[i].posicao = (Vector2){ 
                         j->posicao.x + j->direita[0].width / 2 - MeasureText("-1 moeda", 20) / 2, 
                         j->posicao.y - 10 
                     };
@@ -231,10 +256,8 @@ void DesenharTextosPerda(TextoPerda textos[MAX_TEXTS]) {
     for (int i = 0; i < MAX_TEXTS; i++) {
         if (textos[i].active) {
             DrawText(textos[i].texto,
-                     textos[i].position.x,
-                     textos[i].position.y - 20,
-                     20,
-                     RED);
+                     textos[i].posicao.x,
+                     textos[i].posicao.y - 20, 20, RED);
 
             if (GetTime() > textos[i].Congelado) {
                 textos[i].active = false;

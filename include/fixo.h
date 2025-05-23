@@ -2,6 +2,7 @@
 #define CONSTANTS_H
 
 #include <raylib.h>
+#include "cJSON.h"
 
 
 #define WINDOW_WIDTH  1280
@@ -25,5 +26,7 @@ typedef enum {
 } TelaAtual;
 
 extern Rectangle areaJogo;
+
+void CarregarTexturas(Texture2D *imagens, cJSON *array, int *quantidade);
 
 #endif

@@ -9,26 +9,25 @@
 #define MAX_FANTASMAS 50
 
 typedef struct {
-    Vector2 position; 
-    float speed;   
+    Vector2 posicao; 
+    float velocidade;   
     Direction currentDirection; 
     float frameTime; 
     float timer;     
     int frameIndex;  
-    float moveCooldown;  
+    float moveLimite;  
     float moveTimer;  
     Texture2D up[MAX_GHOST_FRAMES]; 
     Texture2D down[MAX_GHOST_FRAMES];  
     Texture2D left[MAX_GHOST_FRAMES];  
     Texture2D right[MAX_GHOST_FRAMES]; 
-    
     int frameCount[4]; 
 } Ghost;
 
 typedef struct {
     Ghost ghost;
     float tempoTextoMoeda;
-    float speed;
+    float velocidade;
 } Ghost2;
 
 
@@ -42,9 +41,8 @@ void InicializarListaFantasmas(ListaFantasmas *lista, const char *caminhoJSON, c
 void AtualizarListaFantasmas(ListaFantasmas *lista, Vector2 jogadorPos, Rectangle areaJogo, float delta);
 void DesenharListaFantasmas(ListaFantasmas *lista);
 void DestruirListaFantasmas(ListaFantasmas *lista);
-void CarregarTexturas(Texture2D *imagens, const cJSON *array, int *quantidade);
 Ghost CriarFantasma(const char *caminhoJSON, const char *chaveFantasma, Vector2 posicaoInicial);
-Ghost2 CriarGhost2(const char *jsonPath, const char *spriteID, Vector2 pos);
+Ghost2 CriarGhost2(const char *caminhoJSON, const char *chaveFantasma, Vector2 posicao);
 void AtualizarFantasma(Ghost *g, Vector2 jogadorPos, Rectangle areaJogo);
 void DesenharFantasma(Ghost *g);
 void DestruirFantasma(Ghost *g);
