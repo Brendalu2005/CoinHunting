@@ -10,4 +10,5 @@ guto 44
 bren2 27
 edu 17
 bren 160
+wasd 5
 fffff 2
