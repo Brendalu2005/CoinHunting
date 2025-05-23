@@ -34,7 +34,7 @@ int main(void) {
     ListaFantasmas fantasmas;
     Ghost2 ghost2 = CriarGhost2(JSON, "ghost2_walk", (Vector2){ 500, 200 });
     InicializarListaFantasmas(&fantasmas, JSON, "ghost_walk");
-    
+    ghost2.eixoAtual = MOVENDO_X;
 
     Moeda moedas[MAX_MOEDAS];
     float tempoRespawn = 0.0f;
@@ -160,7 +160,7 @@ int main(void) {
                 if (!jogoFinalizado) {
                     if (opcaojogadores == 1) {
                         AtualizarListaFantasmas(&fantasmas, p3.posicao, areaJogo, GetFrameTime());
-                        AtualizarFantasma(&ghost2.ghost, p3.posicao,  areaJogo);
+                        AtualizarGhost2(&ghost2, p3.posicao, areaJogo);
                         AtualizarJogador(&p3, KEY_W, KEY_S, KEY_A, KEY_D,  areaJogo);
                         colisaoMoedas(moedas, &p3, somMoeda);  
                         for (int i = 0; i < fantasmas.quantidade; i++) {
@@ -247,12 +247,21 @@ int main(void) {
                     if (opcaojogadores == 2) {
                         int pontos1 = p1.moedasPrata + p1.moedasOuro * 2;
                         int pontos2 = p2.moedasPrata + p2.moedasOuro * 2;
-
-                        const char* vencedor = (pontos1 > pontos2) ? "P1 Venceu!" :
-                                            (pontos2 > pontos1) ? "P2 Venceu!" : "Empate!";
+                    
+                        const char* vencedor;
+                    
+                        if (pontos1 > pontos2) {
+                            vencedor = "P1 Venceu!";
+                        } else if (pontos2 > pontos1) {
+                            vencedor = "P2 Venceu!";
+                        } else {
+                            vencedor = "Empate!";
+                        }
+                    
                         int larguraV = MeasureText(vencedor, 30);
                         DrawText(vencedor, GetScreenWidth() / 2 - larguraV / 2, caixaY + 75, 30, GREEN);
                     }
+                    
                     
                     DrawText("Digite seu nome (até 4 letras):", caixaX + 30, caixaY + 125, 20, WHITE);
 
@@ -291,8 +300,14 @@ int main(void) {
                         } else {
                             int pontos1 = p1.moedasPrata + p1.moedasOuro * 2;
                             int pontos2 = p2.moedasPrata + p2.moedasOuro * 2;
-                            pontos = (pontos1 > pontos2) ? pontos1 : pontos2;
+                        
+                            if (pontos1 > pontos2) {
+                                pontos = pontos1;
+                            } else {
+                                pontos = pontos2;
+                            }
                         }
+                        
 
                         AdicionarAoRanking(&ranking, nomeJogador, pontos);
                         SalvarRanking(&ranking);

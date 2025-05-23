@@ -24,10 +24,14 @@ typedef struct {
     int frameCount[4]; 
 } Ghost;
 
+typedef enum { MOVENDO_X, MOVENDO_Y } EixoMovimento;
+
 typedef struct {
     Ghost ghost;
     float tempoTextoMoeda;
     float velocidade;
+    float tempoEixo;
+    EixoMovimento eixoAtual;
 } Ghost2;
 
 
@@ -52,5 +56,7 @@ void DesenharTextosPerda(TextoPerda textos[MAX_TEXTS]);
 void CarregarSomFantasma(void);
 void DescarregarSomFantasma(void);
 
+void AtualizarGhost2(Ghost2 *Ghost, Vector2 jogadorPos, Rectangle areaJogo);
+void VerificarColisaoGhost2(Ghost2 *ghost, Jogador *j, Sound somColisao, TextoPerda textos[MAX_TEXTS]);
 
 #endif

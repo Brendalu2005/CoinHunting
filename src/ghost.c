@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
-
+#include <math.h>
 
 
 Ghost CriarFantasma(const char *caminhoJSON, const char *chaveFantasma, Vector2 posicaoInicial) {
@@ -184,10 +184,19 @@ void DestruirListaFantasmas(ListaFantasmas *lista) {
 
 Ghost2 CriarGhost2(const char *caminhoJSON, const char *chaveFantasma, Vector2 posicao) {
     Ghost2 g2;
+    g2.eixoAtual = MOVENDO_X;
+    g2.tempoEixo = 0.2f;  
+
     g2.ghost = CriarFantasma(caminhoJSON, chaveFantasma, posicao);
     g2.velocidade = g2.ghost.velocidade;
     g2.tempoTextoMoeda = 0.0f;
     return g2;
+}
+
+Vector2 Normaliza(Vector2 v) {
+    float comprimento = sqrtf(v.x * v.x + v.y * v.y);
+    if (comprimento == 0) return (Vector2){ 0, 0 };
+    return (Vector2){ v.x / comprimento, v.y / comprimento };
 }
 
 
@@ -243,6 +252,26 @@ void VerificarColisaoGhost2(Ghost2 *ghost, Jogador *j, Sound somColisao, TextoPe
             }
 
             j->tempoTextoMoeda = tempoAtual + 5.0f;
+
+            Vector2 des = {
+                ghost->ghost.posicao.x - j->posicao.x,
+                ghost->ghost.posicao.y - j->posicao.y
+            };
+            
+            Vector2 direcaoOposta = Normaliza(des);
+            
+            ghost->ghost.posicao.x += direcaoOposta.x * 1200.0f;
+            ghost->ghost.posicao.y += direcaoOposta.y * 1200.0f;
+            
+            if (ghost->ghost.posicao.x < areaJogo.x)
+                ghost->ghost.posicao.x = areaJogo.x;
+            if (ghost->ghost.posicao.x + ghost->ghost.right[0].width > areaJogo.x + areaJogo.width)
+                ghost->ghost.posicao.x = areaJogo.x + areaJogo.width - ghost->ghost.right[0].width;
+            
+            if (ghost->ghost.posicao.y < areaJogo.y)
+                ghost->ghost.posicao.y = areaJogo.y;
+            if (ghost->ghost.posicao.y + ghost->ghost.down[0].height > areaJogo.y + areaJogo.height)
+                ghost->ghost.posicao.y = areaJogo.y + areaJogo.height - ghost->ghost.down[0].height;
         }
     }
 }
@@ -265,4 +294,48 @@ void DesenharTextosPerda(TextoPerda textos[MAX_TEXTS]) {
 
 
 
+
+void AtualizarGhost2(Ghost2 *ghost, Vector2 jogadorPos, Rectangle areaJogo) {
+    float dt = GetFrameTime();
+    ghost->ghost.timer += dt;
+    ghost->tempoEixo -= dt;
+
+    float dx = jogadorPos.x - ghost->ghost.posicao.x;
+    float dy = jogadorPos.y - ghost->ghost.posicao.y;
+
+    float velocidade = ghost->velocidade * 0.4f;
+
+    if (ghost->tempoEixo <= 0) {
+        if (ghost->eixoAtual == MOVENDO_X && fabs(dy) > fabs(dx)) {
+            ghost->eixoAtual = MOVENDO_Y;
+            ghost->tempoEixo = 0.2f;  
+        } else if (ghost->eixoAtual == MOVENDO_Y && fabs(dx) > fabs(dy)) {
+            ghost->eixoAtual = MOVENDO_X;
+            ghost->tempoEixo = 0.2f;
+        }
+    }
+
+    if (ghost->eixoAtual == MOVENDO_X) {
+        if (dx > 0 && ghost->ghost.posicao.x + ghost->ghost.right[0].width < areaJogo.x + areaJogo.width) {
+            ghost->ghost.posicao.x += velocidade;
+            ghost->ghost.currentDirection = RIGHT;
+        } else if (dx < 0 && ghost->ghost.posicao.x > areaJogo.x) {
+            ghost->ghost.posicao.x -= velocidade;
+            ghost->ghost.currentDirection = LEFT;
+        }
+    } else {
+        if (dy > 0 && ghost->ghost.posicao.y + ghost->ghost.down[0].height < areaJogo.y + areaJogo.height) {
+            ghost->ghost.posicao.y += velocidade;
+            ghost->ghost.currentDirection = DOWN;
+        } else if (dy < 0 && ghost->ghost.posicao.y > areaJogo.y) {
+            ghost->ghost.posicao.y -= velocidade;
+            ghost->ghost.currentDirection = UP;
+        }
+    }
+    int totalFrames = ghost->ghost.frameCount[ghost->ghost.currentDirection];
+    if (totalFrames > 1 && ghost->ghost.timer >= ghost->ghost.frameTime) {
+        ghost->ghost.frameIndex = (ghost->ghost.frameIndex + 1) % totalFrames;
+        ghost->ghost.timer = 0;
+    }
+}
 

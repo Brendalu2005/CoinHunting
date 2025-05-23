@@ -52,10 +52,23 @@ void DesenharSelecaoJogadores(Rectangle botao1, Rectangle botao2, Texture2D back
     Color corSelecionada = YELLOW;
     Color corNormal = LIGHTGRAY;
 
-    DrawRectangle(x, y1, largura, altura, (opcao == 0) ? corSelecionada : corNormal);
+    Color cor;
+    if (opcao == 0) {
+        cor = corSelecionada;
+    } else {
+        cor = corNormal;
+    }
+    DrawRectangle(x, y1, largura, altura, cor);
+
     DrawText("1 JOGADOR", x + 40, y1 + 15, 20, BLACK);
 
-    DrawRectangle(x, y2, largura, altura, (opcao == 1) ? corSelecionada : corNormal);
+    if (opcao == 1) {
+        cor = corSelecionada;
+    } else {
+        cor = corNormal;
+    }
+    DrawRectangle(x, y2, largura, altura, cor);
+
     DrawText("2 JOGADORES", x + 30, y2 + 15, 20, BLACK);
 }
 void AtualizarSobre(TelaAtual *tela) {

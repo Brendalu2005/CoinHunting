@@ -51,7 +51,13 @@ void DesenharMenu(Rectangle botao, Texture2D background, int opcao) {
 
     const char *opcoes[] = { "INICIAR", "SOBRE", "RANKING" };
     for (int i = 0; i < TOTAL_OPCOES_MENU; i++) {
-        Color cor = (i == opcao) ? corSelecionada : corNormal;
+        Color cor;
+        if (i == opcao) {
+            cor = corSelecionada;
+        } else {
+            cor = corNormal;
+        }
+
         DrawRectangle(x, y + i * 70, largura, altura, cor);
         int textoX = x + (largura - MeasureText(opcoes[i], 20)) / 2;
         DrawText(opcoes[i], textoX, y + i * 70 + 15, 20, BLACK);

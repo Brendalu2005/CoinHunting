@@ -62,7 +62,12 @@ void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo, 
                         rand() % (int)(areaJogo.width - 32) + (int)areaJogo.x,
                         rand() % (int)(areaJogo.height - 32) + (int)areaJogo.y
                     };                    
-                    moedas[i].tipo      = (rand() % 100 < 80) ? PRATA : OURO;
+                    if (rand() % 100 < 80) {
+                        moedas[i].tipo = PRATA;
+                    } else {
+                        moedas[i].tipo = OURO;
+                    }
+                    
                     moedas[i].tempoVida = 0.0f;
                     break;
                 }
@@ -84,7 +89,13 @@ void DesenharMoedas(Moeda moedas[]) {
     for (int i = 0; i < MAX_MOEDAS; i++) {
         if (!moedas[i].ativa) continue;
 
-        Texture2D tex = (moedas[i].tipo == PRATA) ? moedaPrataTex : moedaOuroTex;
+        Texture2D tex;
+        if (moedas[i].tipo == PRATA) {
+            tex = moedaPrataTex;
+        } else {
+            tex = moedaOuroTex;
+        }
+
         Color cor = WHITE;
 
         float tempoRestante = tempoVidaMoeda - moedas[i].tempoVida;
