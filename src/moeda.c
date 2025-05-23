@@ -85,12 +85,13 @@ void DesenharMoedas(Moeda moedas[]) {
         if (!moedas[i].ativa) continue;
 
         Texture2D tex = (moedas[i].tipo == PRATA) ? moedaPrataTex : moedaOuroTex;
-        float tempoRestante = tempoVidaMoeda - moedas[i].tempoVida;
         Color cor = WHITE;
 
-        if (tempoRestante <= 2.0f) {
+        float tempoRestante = tempoVidaMoeda - moedas[i].tempoVida;
+
+        if (tempoRestante <= 3.0f) {
             float piscar = fmodf(GetTime(), 0.4f);
-            if (piscar < 0.2f) cor.a = 100;
+            if (piscar < 0.3f) cor.a = 100;
         }
 
         if (moedas[i].tipo == OURO){

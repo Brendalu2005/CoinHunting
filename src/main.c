@@ -51,7 +51,7 @@ int main(void) {
     int opcaoMenu = 0;
     int opcaojogadores = -1;
 
-    int tempoRestante = 60; 
+    int tempoRestante = 180; 
     float tempoAcumulado = 0.0f;
 
     bool jogoFinalizado = false;

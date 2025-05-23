@@ -191,9 +191,6 @@ Ghost2 CriarGhost2(const char *caminhoJSON, const char *chaveFantasma, Vector2 p
 }
 
 
-
-
-
 void VerificarColisaoGhost2(Ghost2 *ghost, Jogador *j, Sound somColisao, TextoPerda textos[MAX_TEXTS]) {
     float tempoAtual = GetTime();
 
