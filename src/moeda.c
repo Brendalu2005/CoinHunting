@@ -83,7 +83,6 @@ void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo, 
         if (moedas[i].ativa) {
             moedas[i].tempoVida += GetFrameTime();
             if (moedas[i].tempoVida >= moedas[i].duracaoVida){
-                printf("Moeda %d expirou (tempoVida = %.2f / duracao = %.2f)\n", i, moedas[i].tempoVida, moedas[i].duracaoVida);
                 moedas[i].ativa = false;
             } 
         }
@@ -144,7 +143,6 @@ void colisaoMoedas(Moeda moedas[], Jogador *jogador, Sound somMoeda) {
         };
 
         if (CheckCollisionRecs(hitboxJogador, rectMoeda)) {
-            printf("Coletada moeda %d (tipo: %s)\n", i, moedas[i].tipo == OURO ? "OURO" : "PRATA");
 
             if (moedas[i].tipo == OURO) {
                 jogador->moedasOuro++;
