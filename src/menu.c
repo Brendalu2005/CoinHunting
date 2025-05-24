@@ -59,7 +59,12 @@ void DesenharMenu(Rectangle botao, Texture2D background, int opcao) {
     Color corSelecionada = YELLOW;
 
     for (int i = 0; i < TOTAL_OPCOES_MENU; i++) {
-        Color cor = (i == opcao) ? corSelecionada : corNormal;
+        Color cor;
+        if (i == opcao) {
+            cor = corSelecionada;
+        } else {
+            cor = corNormal;
+        }
 
         DrawRectangle(x, y + i * 70, largura, altura, cor);
 
