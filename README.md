@@ -130,7 +130,7 @@ O menu inicial possui três opções:
 
 ## 🏆 Ranking
 
-Os 10 melhores jogadores com as maiores pontuações são exibidos no menu **Ranking**, junto com seus apelidos e número de moedas coletadas.
+Os 5 melhores jogadores, com as maiores pontuações são exibidos no menu **Ranking**, junto com seus apelidos e número de moedas coletadas.
 
 
 </details>
