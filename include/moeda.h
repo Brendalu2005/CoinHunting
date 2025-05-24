@@ -12,6 +12,7 @@ typedef struct {
     bool ativa;
     TipoMoeda tipo;
     float tempoVida; 
+    float tempoLimiteVida;
 } Moeda;
 
 extern Texture2D moedaPrataTex;

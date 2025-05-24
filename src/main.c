@@ -263,7 +263,7 @@ int main(void) {
                     }
                     
                     
-                    DrawText("Digite seu nome (até 4 letras):", caixaX + 30, caixaY + 125, 20, WHITE);
+                    DrawText("Digite seu nome (até 5 letras):", caixaX + 30, caixaY + 125, 20, WHITE);
 
                     
                     DrawRectangle(caixaX + 30, caixaY + 155, caixaLargura - 60, 40, DARKGRAY);
