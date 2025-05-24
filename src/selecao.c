@@ -89,10 +89,10 @@ void DesenharSobre(Texture2D background) {
 
     const char *titulo = "Sobre o Jogo";
     const char *descricao = "Ajude os exploradores a coletarem o máximo de moedas possivel\n sem ser atingido pelos fantasmas protetores da caverna.\n";
-     const char *descricao2 = "Fantasma vermelho: tira moedas e congela o jogador por um tempo\n"
-                              "Fantasma azul: te centraliza no mapa novamente\n";
+     const char *descricao2 = "Fantasma vermelho: Tira moedas e congela o jogador por um tempo, apesar de ser lerdo, ele lhe seguirá pelo mapa.\n\n"
+                              "Fantasma azul: Joga o jogador pro centro do mapa, são rápidos, mas andam aleatoriamente pelo mapa.\n";
     const char *descricao3 =
-        "Controles:\n"
+        "\nControles:\n"
         "Jogador 1: W A S D \n"
         "Jogador 2: Setas";
 

@@ -39,13 +39,12 @@ void InicializarMoedas(Moeda moedas[]) {
         moedas[i].posicao   = (Vector2){0, 0};
         moedas[i].tipo      = PRATA;
         moedas[i].tempoVida = 0.0f;
-        moedas[i].tempoLimiteVida = tempoVidaMoeda;
     }
 }
 
 void AtualizarTempoVidaMoeda(float tempoTotalJogo) {
     float novaVida = 13.0f - floorf(tempoTotalJogo / 30.0f);
-    tempoVidaMoeda = fmaxf(2.0f, novaVida);
+    tempoVidaMoeda = fmaxf(5.0f, novaVida);
 }
 
 void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo,  Rectangle areaJogo) {
@@ -70,7 +69,6 @@ void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo, 
                     }
                     
                     moedas[i].tempoVida = 0.0f;
-                    moedas[i].tempoLimiteVida = tempoVidaMoeda;
                     break;
                 }
             }
@@ -80,9 +78,9 @@ void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo, 
     for (int i = 0; i < MAX_MOEDAS; i++) {
         if (moedas[i].ativa) {
             moedas[i].tempoVida += GetFrameTime();
-            if (moedas[i].tempoVida >= moedas[i].tempoLimiteVida + GetFrameTime()) {
+            if (moedas[i].tempoVida >= tempoVidaMoeda){
                 moedas[i].ativa = false;
-            }         
+            } 
         }
     }
 }
@@ -91,28 +89,29 @@ void DesenharMoedas(Moeda moedas[]) {
     for (int i = 0; i < MAX_MOEDAS; i++) {
         if (!moedas[i].ativa) continue;
 
-        Texture2D tex = (moedas[i].tipo == PRATA) ? moedaPrataTex : moedaOuroTex;
-        Color cor = WHITE;
-
-        float tempoRestante = moedas[i].tempoLimiteVida - moedas[i].tempoVida;
-
-        if (tempoRestante <= moedas[i].tempoLimiteVida * 0.3f) {
-            
-            if (((int)(GetTime() * 5)) % 2 == 0) {
-                cor.a = 80;
-            } else {
-                cor.a = 255;
-            }
+        Texture2D tex;
+        if (moedas[i].tipo == PRATA) {
+            tex = moedaPrataTex;
+        } else {
+            tex = moedaOuroTex;
         }
 
-        if (moedas[i].tipo == OURO) {
-            DrawTextureEx(tex, moedas[i].posicao, 0.0f, 1.2f, cor); 
-        } else {
+        Color cor = WHITE;
+
+        float tempoRestante = tempoVidaMoeda - moedas[i].tempoVida;
+
+        if (tempoRestante <= 3.0f) {
+            float piscar = fmodf(GetTime(), 0.4f);
+            if (piscar < 0.3f) cor.a = 100;
+        }
+
+        if (moedas[i].tipo == OURO){
+            DrawTextureEx(tex, moedas[i].posicao, 0.0f, 1.2f, cor);
+        }else{
             DrawTextureV(tex, moedas[i].posicao, cor);
         }
     }
 }
-
 
 void colisaoMoedas(Moeda moedas[], Jogador *jogador, Sound somMoeda) {
 
