@@ -104,8 +104,8 @@ void DesenharSobre(Texture2D background) {
     int larguraDescricao3 = MeasureText(descricao3, fonteDescricao);
 
     DrawText(titulo, (GetScreenWidth() - larguraTitulo) / 2, 100, fonteTitulo, WHITE);
-    DrawText(descricao, (GetScreenWidth() - larguraDescricao) / 2, 200, fonteDescricao, WHITE);
+    DrawText(descricao, (GetScreenWidth() - larguraDescricao) / 2, 180, fonteDescricao, WHITE);
     DrawText(descricao2, (GetScreenWidth() - larguraDescricao2) / 2, 260, fonteDescricao, WHITE);
-    DrawText(descricao3, (GetScreenWidth() - larguraDescricao3) / 2, 320, fonteDescricao, WHITE);
+    DrawText(descricao3, (GetScreenWidth() - larguraDescricao3) / 22, 320, fonteDescricao, WHITE);
 }
 

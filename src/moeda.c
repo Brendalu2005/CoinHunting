@@ -54,7 +54,7 @@ void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo, 
     AtualizarTempoVidaMoeda(tempoTotalJogo);
     *tempoRespawn += GetFrameTime();
 
-    if (*tempoRespawn >= 2.0f) {
+    if (*tempoRespawn >= 1.5f) {
         *tempoRespawn = 0;
 
         for (int i = 0; i < MAX_MOEDAS; i++) {

@@ -227,7 +227,7 @@ void VerificarColisaoGhost2(Ghost2 *ghost, Jogador *j, Sound somColisao, TextoPe
     };
 
     if (CheckCollisionRecs(rectJogador, rectGhost)) {
-        if (tempoAtual - j->tempoUltimaColisaoGhost2 >= 5.0f) {
+        if (tempoAtual - j->tempoUltimaColisaoGhost2 >= 10.0f) {
             PlaySound(somColisao);
             j->tempoUltimaColisaoGhost2 = tempoAtual;
 
