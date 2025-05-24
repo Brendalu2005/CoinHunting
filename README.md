@@ -154,7 +154,7 @@ Este jogo foi desenvolvido utilizando a linguagem **C**, aprendida na disciplina
 <details>
 <summary>🎬VIDEO DEMONSTRATIVO</summary>
 
-[**Video demonstrando a jogabilidade**]()
+[**Video demonstrando a jogabilidade**](https://youtu.be/GeS_lryc51Q)
 
 </details>
 
