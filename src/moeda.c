@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <stdio.h>
 
 float tempoVidaMoeda = 13.0f;
 
@@ -35,12 +36,14 @@ void UnloadTexturasMoedas(void) {
 void InicializarMoedas(Moeda moedas[]) {
     srand(time(NULL));
     for (int i = 0; i < MAX_MOEDAS; i++) {
-        moedas[i].ativa     = false;
-        moedas[i].posicao   = (Vector2){0, 0};
-        moedas[i].tipo      = PRATA;
-        moedas[i].tempoVida = 0.0f;
+        moedas[i].ativa        = false;
+        moedas[i].posicao      = (Vector2){0, 0};
+        moedas[i].tipo         = PRATA;
+        moedas[i].tempoVida    = 0.0f;
+        moedas[i].duracaoVida  = 0.0f;
     }
 }
+
 
 void AtualizarTempoVidaMoeda(float tempoTotalJogo) {
     float novaVida = 13.0f - floorf(tempoTotalJogo / 30.0f);
@@ -68,7 +71,8 @@ void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo, 
                         moedas[i].tipo = OURO;
                     }
                     
-                    moedas[i].tempoVida = 0.0f;
+                    moedas[i].tempoVida   = 0.0f;
+                    moedas[i].duracaoVida = tempoVidaMoeda;
                     break;
                 }
             }
@@ -78,7 +82,8 @@ void AtualizarMoedas(Moeda moedas[], float *tempoRespawn, float tempoTotalJogo, 
     for (int i = 0; i < MAX_MOEDAS; i++) {
         if (moedas[i].ativa) {
             moedas[i].tempoVida += GetFrameTime();
-            if (moedas[i].tempoVida >= tempoVidaMoeda){
+            if (moedas[i].tempoVida >= moedas[i].duracaoVida){
+                printf("Moeda %d expirou (tempoVida = %.2f / duracao = %.2f)\n", i, moedas[i].tempoVida, moedas[i].duracaoVida);
                 moedas[i].ativa = false;
             } 
         }
@@ -98,7 +103,7 @@ void DesenharMoedas(Moeda moedas[]) {
 
         Color cor = WHITE;
 
-        float tempoRestante = tempoVidaMoeda - moedas[i].tempoVida;
+        float tempoRestante = moedas[i].duracaoVida - moedas[i].tempoVida;
 
         if (tempoRestante <= 3.0f) {
             float piscar = fmodf(GetTime(), 0.4f);
@@ -113,55 +118,47 @@ void DesenharMoedas(Moeda moedas[]) {
     }
 }
 
-void colisaoMoedas(Moeda moedas[], Jogador *jogador, Sound somMoeda) {
+#define JOGADOR_HITBOX_LARGURA 16
+#define JOGADOR_HITBOX_ALTURA  20
 
-    Texture2D txt = {0};
-
-    switch (jogador->direcaoAtual) {
-        case UP:    
-            txt = jogador->cima   [jogador->indiceFrame]; 
-            break;
-        case DOWN:
-            txt = jogador->baixo  [jogador->indiceFrame]; 
-            break;
-        case LEFT:  
-            txt = jogador->esquerda[jogador->indiceFrame]; 
-            break;
-        case RIGHT: 
-            txt = jogador->direita [jogador->indiceFrame]; 
-            break;
-    }
-
-    Rectangle rectJogador = {
+Rectangle getHitboxJogador(Jogador *jogador) {
+    return (Rectangle){
         jogador->posicao.x,
         jogador->posicao.y,
-        (float)txt.width,
-        (float)txt.height
+        jogador->direita[0].width,
+        jogador->baixo[0].height
     };
+}
+
+void colisaoMoedas(Moeda moedas[], Jogador *jogador, Sound somMoeda) {
+    Rectangle hitboxJogador = getHitboxJogador(jogador);
 
     for (int i = 0; i < MAX_MOEDAS; i++) {
-        if (!moedas[i].ativa){
-            continue;
-        } 
+        if (!moedas[i].ativa) continue;
 
         Rectangle rectMoeda = {
-            moedas[i].posicao.x,
-            moedas[i].posicao.y,
+            moedas[i].posicao.x - MOEDA_LARGURA / 2.0f,
+            moedas[i].posicao.y - MOEDA_ALTURA / 2.0f,
             MOEDA_LARGURA,
             MOEDA_ALTURA
         };
 
-        if (CheckCollisionRecs(rectJogador, rectMoeda)) {
-            if (moedas[i].tipo == OURO){
+        if (CheckCollisionRecs(hitboxJogador, rectMoeda)) {
+            printf("Coletada moeda %d (tipo: %s)\n", i, moedas[i].tipo == OURO ? "OURO" : "PRATA");
+
+            if (moedas[i].tipo == OURO) {
                 jogador->moedasOuro++;
-            }else{
+            } else {
                 jogador->moedasPrata++;
-            } 
+            }
 
             PlaySound(somMoeda);
             moedas[i].ativa = false;
+
+            jogador->tempoTextoMoeda = GetTime() + 0.2f;
         }
     }
 }
+
 
 

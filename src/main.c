@@ -159,9 +159,9 @@ int main(void) {
 
                 if (!jogoFinalizado) {
                     if (opcaojogadores == 1) {
+                        AtualizarJogador(&p3, KEY_W, KEY_S, KEY_A, KEY_D,  areaJogo);
                         AtualizarListaFantasmas(&fantasmas, p3.posicao, areaJogo, GetFrameTime());
                         AtualizarGhost2(&ghost2, p3.posicao, areaJogo);
-                        AtualizarJogador(&p3, KEY_W, KEY_S, KEY_A, KEY_D,  areaJogo);
                         colisaoMoedas(moedas, &p3, somMoeda);  
                         for (int i = 0; i < fantasmas.quantidade; i++) {
                             if (VerificarColisaoFantasma(&fantasmas.fantasmas[i], &p3, somColisao)) {
@@ -171,10 +171,10 @@ int main(void) {
                         VerificarColisaoGhost2(&ghost2, &p3, somColisao, textos);
                         
                     } else if (opcaojogadores == 2) {
-                        AtualizarListaFantasmas(&fantasmas, p3.posicao, areaJogo, GetFrameTime());
-                        AtualizarFantasma(&ghost2.ghost, p1.posicao, areaJogo);
                         AtualizarJogador(&p1, KEY_W, KEY_S, KEY_A, KEY_D, areaJogo);
                         AtualizarJogador(&p2, KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, areaJogo);
+                        AtualizarListaFantasmas(&fantasmas, p3.posicao, areaJogo, GetFrameTime());
+                        AtualizarFantasma(&ghost2.ghost, p1.posicao, areaJogo);
                         colisaoMoedas(moedas, &p1, somMoeda);  
                         colisaoMoedas(moedas, &p2, somMoeda); 
                         for (int i = 0; i < fantasmas.quantidade; i++) {
