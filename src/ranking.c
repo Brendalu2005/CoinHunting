@@ -82,7 +82,7 @@ void LiberarRanking(Ranking **head) {
 
 void DesenharRanking(Ranking **head) {
     static int scrollOffset = 0;
-    int totalExibidos = 20;
+    int totalExibidos = 5;
 
     ClearBackground(DARKGRAY);
     
@@ -92,8 +92,8 @@ void DesenharRanking(Ranking **head) {
             30, 
             GOLD);
 
-    DrawText("Use setas (cima e baixo) para navegar", 
-            GetScreenWidth()/2 - MeasureText("Use setas (cima e baixo) para navegar", 20)/2, 
+    DrawText("Melhores Pontuações", 
+            GetScreenWidth()/2 - MeasureText("Melhores Pontuações", 20)/2, 
             60, 
             20, 
             LIGHTGRAY);

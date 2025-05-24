@@ -242,11 +242,11 @@ void VerificarColisaoGhost2(Ghost2 *ghost, Jogador *j, Sound somColisao, TextoPe
                 if (!textos[i].active) {
                     textos[i].active = true;
                     textos[i].posicao = (Vector2){ 
-                        j->posicao.x + j->direita[0].width / 2 - MeasureText("-1 moeda", 20) / 2, 
+                        j->posicao.x + j->direita[0].width / 2 - MeasureText("-2 moedas", 20) / 2, 
                         j->posicao.y - 10 
                     };
                     textos[i].Congelado = tempoAtual + 5.0f;
-                    strcpy(textos[i].texto, "-1 moeda");
+                    strcpy(textos[i].texto, "-2 moedas");
                     break;
                 }
             }
