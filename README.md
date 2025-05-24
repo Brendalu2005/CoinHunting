@@ -91,14 +91,14 @@ depois
 - Capture o maior número de moedas antes que o tempo acabe.
 - Desvie dos fantasmas que tentarão atrapalhar sua missão.
 - Ao fim da partida, insira um **Nickname**.
-- Se sua pontuação estiver entre as 10 maiores, ela aparecerá no **Ranking**.
+- Se ele estiver no  **top 5**, será exibido no **Ranking**.
 
 ### 👥 2 Jogadores
 - Dois jogadores competem para ver quem coleta mais moedas.
 - **Player 1** usa as teclas **W, A, S, D**.
 - **Player 2** usa as **setas direcionais**.
 - No final, o jogador vencedor insere um **Nickname**.
-- Se ele estiver no  **top 10**, será exibido no **Ranking**.
+- Se ele estiver no  **top 5**, será exibido no **Ranking**.
 
 ---
 
@@ -108,7 +108,7 @@ O menu inicial possui três opções:
 
 - **Iniciar** ->Escolha entre jogar com 1 ou 2 jogadores.  
 - **Sobre** -> Informações sobre o jogo e como jogar.  
-- **Ranking** -> Exibe os 10 melhores jogadores.
+- **Ranking** -> Exibe os 5 melhores jogadores.
 
 ---
 
@@ -130,7 +130,7 @@ O menu inicial possui três opções:
 
 ## 🏆 Ranking
 
-Os 5 melhores jogadores, com as maiores pontuações são exibidos no menu **Ranking**, junto com seus apelidos e número de moedas coletadas.
+Os 5 melhores jogadores, com as maiores pontuações são exibidos no menu **Ranking**, junto com seu nickname e número de moedas coletadas.
 
 
 </details>
