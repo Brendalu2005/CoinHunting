@@ -25,6 +25,15 @@ void AtualizarMenu(Rectangle botao, TelaAtual *telaAtual, int *opcao) {
 
 }
 
+#define TAM_OPCAO 20
+#define TOTAL_OPCOES_MENU 3
+
+char opcoes[TOTAL_OPCOES_MENU][TAM_OPCAO] = {
+    "INICIAR",
+    "SOBRE",
+    "RANKING"
+};
+
 void DesenharMenu(Rectangle botao, Texture2D background, int opcao) {
     ClearBackground(RAYWHITE);
 
@@ -49,18 +58,12 @@ void DesenharMenu(Rectangle botao, Texture2D background, int opcao) {
     Color corNormal = LIGHTGRAY;
     Color corSelecionada = YELLOW;
 
-    const char *opcoes[] = { "INICIAR", "SOBRE", "RANKING" };
     for (int i = 0; i < TOTAL_OPCOES_MENU; i++) {
-        Color cor;
-        if (i == opcao) {
-            cor = corSelecionada;
-        } else {
-            cor = corNormal;
-        }
+        Color cor = (i == opcao) ? corSelecionada : corNormal;
 
         DrawRectangle(x, y + i * 70, largura, altura, cor);
+
         int textoX = x + (largura - MeasureText(opcoes[i], 20)) / 2;
         DrawText(opcoes[i], textoX, y + i * 70 + 15, 20, BLACK);
     }
 }
-
